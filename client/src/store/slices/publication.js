@@ -6,7 +6,7 @@ export const publicationSlice = createSlice({
   initialState: {
     allPublications: [],
     myPublications: [],
-    ssearch: "",
+    search: "",
   },
   reducers: {
     allPublications: (state, action) => {
@@ -15,21 +15,28 @@ export const publicationSlice = createSlice({
     myPublications: (state, action) => {
       state.myPublications = action.payload;
     },
-    addPublication: (state, action) => {
-      state.myPublications = state.myPublications.push(action.payload);
-    },
+    // addPublication: (state, action) => {
+    //   state.myPublications = state.myPublications.push(action.payload);
+    // },
+    // deletePublication: (state, action) => {
+    //   state.myPublications = action.payload;
+    // },
     logout: (state) => {
       state.myPublications = [];
     },
   },
 });
 
-export const { allPublications, myPublications, addPublication, logout } =
-  publicationSlice.actions;
+export const {
+  allPublications,
+  myPublications,
+  // addPublication,
+  logout,
+} = publicationSlice.actions;
 
 export default publicationSlice.reducer;
 
-export const getAllPublications = () => {
+export const actionGetAllPublications = () => {
   return async function (dispatch) {
     const config = {
       headers: {
@@ -46,7 +53,7 @@ export const getAllPublications = () => {
   };
 };
 
-export const getMyPublications = (token, id) => {
+export const actionGetMyPublications = (token, id) => {
   return async function (dispatch) {
     const config = {
       headers: {
@@ -64,13 +71,7 @@ export const getMyPublications = (token, id) => {
   };
 };
 
-export const clearMyPublications = () => {
-  return async function (dispatch) {
-    dispatch(logout());
-  };
-};
-
-export const createPublication = (values, token, id) => {
+export const actionCreatePublication = (values, token, id) => {
   return async function (dispatch) {
     const config = {
       headers: {
@@ -89,9 +90,56 @@ export const createPublication = (values, token, id) => {
         },
         config
       );
-      dispatch(getMyPublications(token, id));
+      dispatch(actionGetMyPublications(token, id));
+      return { msg: "Publication created" };
     } catch (e) {
       throw { msg: e.response.data.msg };
     }
+  };
+};
+
+export const actionDeletePublication = (token, user_id, product_id) => {
+  return async function (dispatch) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications/delete/${product_id}`;
+    try {
+      const { data } = await axios.delete(URL, config);
+      dispatch(actionGetMyPublications(token, user_id));
+      return { msg: "Publication deleted" };
+    } catch (e) {
+      throw { msg: e.response.data.msg };
+    }
+  };
+};
+
+export const actionUpdatePublication = (values, token, id) => {
+  return async function (dispatch) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications/update/${values._id}`;
+    try {
+      await axios.put(URL, values, config);
+      // dispatch(updatePublication(data.data));
+      // console.log(data);
+      dispatch(actionGetMyPublications(token, id));
+      return { msg: "Publication updated" };
+    } catch (e) {
+      throw { msg: e.response.data.msg };
+    }
+  };
+};
+
+export const actionClearMyPublications = () => {
+  return async function (dispatch) {
+    dispatch(logout());
   };
 };

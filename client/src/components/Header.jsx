@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Searchbar from "./Searchbar";
 import { useEffect } from "react";
 
-import { AuthenticateUser } from "../store/slices/user";
+import { actionAuthenticateUser } from "../store/slices/user";
 
 export default function Header({
   setModalLogin,
@@ -21,7 +21,7 @@ export default function Header({
   useEffect(() => {
     const func = async () => {
       const token = localStorage.getItem("token");
-      if (token) dispatch(AuthenticateUser(token));
+      if (token) dispatch(actionAuthenticateUser(token));
     };
     func();
   }, []);

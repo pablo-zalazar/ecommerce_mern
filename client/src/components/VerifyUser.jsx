@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Outlet, Navigate } from "react-router-dom";
 
-import { AuthenticateUser } from "../store/slices/user";
+import { actionAuthenticateUser } from "../store/slices/user";
 
 export default function VerifyUser() {
   const dispatch = useDispatch();
@@ -12,7 +12,7 @@ export default function VerifyUser() {
       return;
     }
 
-    dispatch(AuthenticateUser(token));
+    dispatch(actionAuthenticateUser(token));
   }, []);
 
   // if (!token) "Loading";

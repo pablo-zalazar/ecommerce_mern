@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { Formik, Form, ErrorMessage, Field } from "formik";
 import { useDispatch } from "react-redux";
 
-import { userRegister } from "../store/slices/user";
+import { actionUserRegister } from "../store/slices/user";
 
 import Alert from "./Alert";
 
@@ -12,7 +12,7 @@ export default function RegisterModal({ showModal }) {
 
   const onSubmit = async (values, resetForm) => {
     try {
-      const data = await dispatch(userRegister(values));
+      const data = await dispatch(actionUserRegister(values));
       Alert("success", data.msg);
       resetForm();
       showModal(false);

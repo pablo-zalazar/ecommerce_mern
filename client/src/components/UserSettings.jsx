@@ -3,16 +3,16 @@ import "../styles/userSettings.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { userLogout } from "../store/slices/user";
-import { clearMyPublications } from "../store/slices/publication";
+import { actionUserLogout } from "../store/slices/user";
+import { actionClearMyPublications } from "../store/slices/publication";
 
 export default function UserSettings({ showSettings, setShowSettings }) {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    dispatch(userLogout());
-    dispatch(clearMyPublications());
+    dispatch(actionUserLogout());
+    dispatch(actionClearMyPublications());
     setShowSettings(!showSettings);
   };
 

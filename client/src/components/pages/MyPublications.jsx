@@ -4,38 +4,52 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { Formik, Form, ErrorMessage, Field } from "formik";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
-  getMyPublications,
-  createPublication,
+  actionGetMyPublications,
+  actionCreatePublication,
+  actionUpdatePublication,
 } from "../../store/slices/publication";
 
 import Publication from "../Publication";
 import Alert from "../Alert";
+import { useState } from "react";
 
 export default function MyPublications() {
   const dispatch = useDispatch();
+  const [create, setCreate] = useState(true);
+  const [publicationUpdate, setPublicationUpdate] = useState({});
   const { user } = useSelector((state) => state.users);
   const { myPublications } = useSelector((state) => state.publications);
 
-  console.log(myPublications);
-
-  const initialValues = {
-    title: "",
-    price: "",
-    description: "",
-    state: "",
-    stock: "1",
-    category: "",
-    subCategory: "",
-  };
+  let initialValues =
+    Object.keys(publicationUpdate).length < 1
+      ? {
+          title: "",
+          price: "",
+          description: "",
+          state: "",
+          stock: "1",
+          category: "",
+          subCategory: "",
+        }
+      : {
+          title: publicationUpdate.title,
+          price: publicationUpdate.price.toString(),
+          description: publicationUpdate.description,
+          state: publicationUpdate.state,
+          stock: publicationUpdate.stock.toString(),
+          category: publicationUpdate.category,
+          subCategory: publicationUpdate.subCategory,
+        };
 
   useEffect(() => {
-    console.log("a");
     const func = async () => {
       const token = localStorage.getItem("token");
       Object.keys(user).length > 0 &&
-        (await dispatch(getMyPublications(token, user._id)));
+        (await dispatch(actionGetMyPublications(token, user._id)));
     };
     func();
   }, [user]);
@@ -58,18 +72,59 @@ export default function MyPublications() {
     subCategory: Yup.string(),
   });
 
+  const update = async (publication) => {
+    setPublicationUpdate(publication);
+    setCreate(false);
+  };
+
   const onSubmit = async (values, resetForm) => {
     const token = localStorage.getItem("token");
-    await dispatch(createPublication(values, token, user._id));
-    resetForm();
+    if (create) {
+      try {
+        const { msg } = await dispatch(
+          actionCreatePublication(values, token, user._id)
+        );
+        resetForm();
+        Alert("success", msg);
+        setCreate(true);
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      try {
+        const { msg } = await dispatch(
+          actionUpdatePublication(
+            {
+              ...publicationUpdate,
+              title: values.title,
+              price: values.price,
+              description: values.description,
+              state: values.state,
+              stock: values.stock,
+              category: values.category,
+              subCategory: values.subCategory,
+            },
+            token,
+            user._id
+          )
+        );
+        setPublicationUpdate({});
+        resetForm();
+        Alert("success", msg);
+        setCreate(true);
+      } catch (e) {
+        console.log(e);
+      }
+    }
   };
 
   return (
     <div className="myPublications">
-      <div className="formContainer">
-        <h2>Create publication</h2>
+      <section className="formContainer">
+        <h2>{create ? "Create publication" : "Update publication"}</h2>
         <Formik
           initialValues={initialValues}
+          enableReinitialize={true}
           validationSchema={createSchema}
           validateOnChange={false}
           validateOnBlur={false}
@@ -146,18 +201,20 @@ export default function MyPublications() {
                   <ErrorMessage name="subCategory" />
                 </p>
               </div>
-              <input type="submit" value="create" />
+              <input type="submit" value={create ? "create" : "update"} />
             </Form>
           )}
         </Formik>
-      </div>
+      </section>
 
-      <div className="cards">
+      <section className="cards">
         <h2>Publications</h2>
+
         {myPublications?.map((p) => (
-          <Publication key={p._id} product={p} />
+          <Publication key={p._id} product={p} owner={true} update={update} />
         ))}
-      </div>
+      </section>
+      <ToastContainer />
     </div>
   );
 }

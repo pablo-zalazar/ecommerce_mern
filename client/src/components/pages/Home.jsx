@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../../styles/home.css";
 
-import { getAllPublications } from "../../store/slices/publication";
+import { actionGetAllPublications } from "../../store/slices/publication";
 import Publication from "../Publication";
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
 
   useEffect(() => {
     async function getPublications() {
-      await dispatch(getAllPublications());
+      await dispatch(actionGetAllPublications());
     }
 
     getPublications();

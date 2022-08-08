@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { Formik, Form, ErrorMessage, Field } from "formik";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { userLogin } from "../store/slices/user";
+import { actionUserLogin } from "../store/slices/user";
 import Alert from "./Alert";
 
 export default function LoginModal({ showModal }) {
@@ -11,7 +11,7 @@ export default function LoginModal({ showModal }) {
 
   const onSubmit = async (values, resetForm) => {
     try {
-      const data = await dispatch(userLogin(values));
+      const data = await dispatch(actionUserLogin(values));
       localStorage.setItem("token", data.token);
       resetForm();
       showModal(false);

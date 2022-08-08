@@ -6,14 +6,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { Formik, Form, ErrorMessage, Field } from "formik";
 
 import Alert from "../Alert";
-import { forgetPassword } from "../../store/slices/user";
+import { actionForgetPassword } from "../../store/slices/user";
 
 export default function ForgetPassword() {
   const dispatch = useDispatch();
 
   const onSubmit = async (values, resetForm) => {
     try {
-      const data = await dispatch(forgetPassword(values));
+      const data = await dispatch(actionForgetPassword(values));
       Alert("success", data.msg);
     } catch (e) {
       Alert("error", e);

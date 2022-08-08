@@ -57,7 +57,7 @@ export const createPublication = async (req, res) => {
     await newPublication.save();
     req.user.publications.push(newPublication._id);
     await req.user.save();
-    return res.json(newPublication);
+    return res.json({ newPublication });
   } catch (e) {
     return res.status(400).json({ msg: e.message });
   }
@@ -68,6 +68,16 @@ export const getPublication = async (req, res) => {
   try {
     const publication = await Publication.findById(id);
     return res.json(publication);
+  } catch (e) {
+    return res.status(400).json({ msg: e.message });
+  }
+};
+
+export const getMyPublications = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id).populate("publications");
+    return res.json(user.publications);
   } catch (e) {
     return res.status(400).json({ msg: e.message });
   }
@@ -84,16 +94,24 @@ export const deletePublication = async (req, res) => {
     user.publications = newUserPublications;
     await Publication.findByIdAndRemove(id);
     await user.save();
+    return res.json({ data: newUserPublications });
   } catch (e) {
     return res.status(400).json({ msg: e.message });
   }
 };
 
-export const getMyPublications = async (req, res) => {
+export const updatePublication = async (req, res) => {
   const { id } = req.params;
+  console.log(req.body);
   try {
-    const user = await User.findById(id).populate("publications");
-    return res.json(user.publications);
+    await Publication.findByIdAndUpdate(id, req.body);
+    const user = await User.findById(req.user._id).populate("publications");
+    const newUserPublications = user.publications.map((p) =>
+      p.id !== req.body._id ? p : req.body
+    );
+    user.publications = newUserPublications;
+    await user.save();
+    return res.json({ data: newUserPublications });
   } catch (e) {
     return res.status(400).json({ msg: e.message });
   }

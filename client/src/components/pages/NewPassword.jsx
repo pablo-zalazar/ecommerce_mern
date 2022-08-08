@@ -7,7 +7,7 @@ import { Formik, Form, ErrorMessage, Field } from "formik";
 import { Link, useParams } from "react-router-dom";
 
 import Alert from "../Alert";
-import { checkToken, newPassword } from "../../store/slices/user";
+import { actionCheckToken, actionNewPassword } from "../../store/slices/user";
 
 export default function NewPassword() {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ export default function NewPassword() {
   useEffect(() => {
     const check = async () => {
       try {
-        const data = await dispatch(checkToken(token));
+        const data = await dispatch(actionCheckToken(token));
         setValidToken(true);
       } catch (e) {
         setValidToken(false);
@@ -33,7 +33,7 @@ export default function NewPassword() {
   const onSubmit = async (values, resetForm) => {
     try {
       const data = await dispatch(
-        newPassword({ token, password: { password: values.password } })
+        actionNewPassword({ token, password: { password: values.password } })
       );
       console.log(data);
       Alert("success", data.msg);

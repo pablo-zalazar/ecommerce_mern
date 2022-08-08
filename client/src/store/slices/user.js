@@ -18,7 +18,7 @@ export const { login, logout } = userSlice.actions;
 
 export default userSlice.reducer;
 
-export const userLogin = (user) => {
+export const actionUserLogin = (user) => {
   return async function (dispatch) {
     const config = {
       headers: {
@@ -37,13 +37,13 @@ export const userLogin = (user) => {
   };
 };
 
-export const userLogout = () => {
+export const actionUserLogout = () => {
   return function (dispatch) {
     dispatch(logout());
   };
 };
 
-export const userRegister = (user) => {
+export const actionUserRegister = (user) => {
   return async function () {
     const config = {
       headers: {
@@ -61,7 +61,7 @@ export const userRegister = (user) => {
   };
 };
 
-export const confirmUser = (token) => {
+export const actionConfirmUser = (token) => {
   return async function () {
     const URL = `${process.env.REACT_APP_BACKEND_URL}/users/confirm/${token}`;
     try {
@@ -73,7 +73,7 @@ export const confirmUser = (token) => {
   };
 };
 
-export const forgetPassword = (values) => {
+export const actionForgetPassword = (values) => {
   return async function () {
     const config = {
       headers: {
@@ -90,7 +90,7 @@ export const forgetPassword = (values) => {
   };
 };
 
-export const checkToken = (token) => {
+export const actionCheckToken = (token) => {
   return async function () {
     const URL = `${process.env.REACT_APP_BACKEND_URL}/users/forget-password/${token}`;
     try {
@@ -102,7 +102,7 @@ export const checkToken = (token) => {
   };
 };
 
-export const newPassword = (values) => {
+export const actionNewPassword = (values) => {
   const { token, password } = values;
   return async function () {
     const config = {
@@ -120,7 +120,7 @@ export const newPassword = (values) => {
   };
 };
 
-export const AuthenticateUser = (token) => {
+export const actionAuthenticateUser = (token) => {
   return async function (dispatch) {
     const config = {
       headers: {
