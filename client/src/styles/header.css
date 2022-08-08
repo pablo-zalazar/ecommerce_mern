@@ -1,0 +1,76 @@
+header {
+  background-color: lightslategray;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10;
+}
+
+header .leftSide {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 10px;
+}
+
+header .leftSide img {
+  max-width: 80px;
+  max-height: 80px;
+}
+
+header .rightSide {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+header .buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  align-items: center;
+}
+
+header .buttons button {
+  background: none;
+  border: none;
+  font-weight: 700;
+}
+
+header .buttons button:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+header div .icon {
+  font-size: 1.5rem;
+}
+
+@media screen and (min-width: 600px) {
+  header .leftSide {
+    flex-basis: 30%;
+  }
+
+  header .rightSide {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header .rightSide {
+    flex-basis: 70%;
+  }
+
+  header .rightSide .searchbar {
+    flex-basis: 70%;
+    max-width: 600px;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  header {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

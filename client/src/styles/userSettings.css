@@ -1,0 +1,36 @@
+.hidden {
+  position: absolute;
+  left: 100vw;
+  transition: all 0.5s ease-in-out;
+}
+
+.show {
+  position: absolute;
+  left: calc(100vw - 120px);
+  transition: all 0.5s ease-in-out;
+}
+
+.userSettings {
+  width: 120px;
+  border: 1px solid black;
+  border-top: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  /* display: none; */
+}
+
+.userSettings div {
+  padding: 5px;
+}
+
+.userSettings div:hover {
+  font-weight: 700;
+  cursor: pointer;
+  padding-left: 10px;
+}
+
+.userSettings a {
+  color: #000;
+  text-decoration: none;
+}

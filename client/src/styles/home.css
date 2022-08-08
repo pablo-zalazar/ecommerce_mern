@@ -1,0 +1,38 @@
+.main {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  background-color: #e9e9e9;
+}
+
+.main .filters {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.main .cards {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media screen and (min-width: 600px) {
+  .main {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .main .filters {
+    flex-basis: 30%;
+    max-width: 250px;
+  }
+
+  .main .cards {
+    flex-basis: 70%;
+    max-width: 800px;
+  }
+}

@@ -1,0 +1,28 @@
+.searchbar form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #d9d9d9;
+}
+
+.searchbar form input {
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #d9d9d9;
+  outline: none;
+  flex: 1;
+}
+
+.searchbar form button {
+  width: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+}
+
+.searchbar form .icon {
+  font-size: 1.5rem;
+}

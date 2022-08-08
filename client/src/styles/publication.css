@@ -1,0 +1,35 @@
+.publication {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  border: 1px solid black;
+}
+
+.publication img {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+}
+
+.publication .data {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+  border: 1px soldi black;
+}
+
+@media screen and (min-width: 600px) {
+  .publication {
+    flex-direction: row;
+    max-width: 600px;
+    justify-content: flex-start;
+  }
+
+  .publication img {
+    margin: 0;
+    flex-basis: 10%;
+  }
+}
