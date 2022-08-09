@@ -116,3 +116,14 @@ export const updatePublication = async (req, res) => {
     return res.status(400).json({ msg: e.message });
   }
 };
+
+export const getDetails = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const publication = await Publication.findById(id).populate("owner");
+    console.log(publication);
+    return res.json(publication);
+  } catch (e) {
+    return req.status(400).json({ msg: e.message });
+  }
+};

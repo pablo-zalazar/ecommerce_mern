@@ -1,18 +1,20 @@
 import React from "react";
 import "../styles/publication.css";
 import { IoTrash, IoPencil } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 
-import { actionDeletePublication } from "../store/slices/publication";
+import {
+  actionDeletePublication,
+  actionGetDetails,
+} from "../store/slices/publication";
 import Alert from "./Alert";
 
 export default function Publication({ product, owner, update }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
-
-  const handleUpdate = () => {};
 
   const handleDelete = () => {
     Swal.fire({
@@ -38,7 +40,10 @@ export default function Publication({ product, owner, update }) {
   };
 
   return (
-    <div className="publication">
+    <div
+      className="publication"
+      onClick={() => navigate(`/details/${product._id}`)}
+    >
       <img src="/img/noImage.png" alt="img" />
       <div className="data">
         <h2>{product.title}</h2>

@@ -1,0 +1,50 @@
+.details {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  padding: 10px;
+}
+
+.details > div {
+  flex-grow: 1;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid black;
+  gap: 10px;
+  padding: 10px;
+}
+
+.details .info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+
+.details .info img {
+  margin: 0 auto;
+}
+
+.details .info div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.details > div button {
+  margin: 0 auto;
+  padding: 5px;
+}
+
+@media screen and (min-width: 900px) {
+  .details .info {
+    flex-direction: row;
+  }
+}

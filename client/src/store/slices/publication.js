@@ -6,7 +6,9 @@ export const publicationSlice = createSlice({
   initialState: {
     allPublications: [],
     myPublications: [],
+    details: {},
     search: "",
+    loading: false,
   },
   reducers: {
     allPublications: (state, action) => {
@@ -15,12 +17,12 @@ export const publicationSlice = createSlice({
     myPublications: (state, action) => {
       state.myPublications = action.payload;
     },
-    // addPublication: (state, action) => {
-    //   state.myPublications = state.myPublications.push(action.payload);
-    // },
-    // deletePublication: (state, action) => {
-    //   state.myPublications = action.payload;
-    // },
+    setDetails: (state, action) => {
+      state.details = action.payload;
+    },
+    clearDetails: (state) => {
+      state.details = {};
+    },
     logout: (state) => {
       state.myPublications = [];
     },
@@ -30,7 +32,8 @@ export const publicationSlice = createSlice({
 export const {
   allPublications,
   myPublications,
-  // addPublication,
+  setDetails,
+  clearDetails,
   logout,
 } = publicationSlice.actions;
 
@@ -135,6 +138,29 @@ export const actionUpdatePublication = (values, token, id) => {
     } catch (e) {
       throw { msg: e.response.data.msg };
     }
+  };
+};
+
+export const actionGetDetails = (id) => {
+  return async function (dispatch) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications/details/${id}`;
+    try {
+      const { data } = await axios.get(URL, config);
+      dispatch(setDetails(data));
+    } catch (e) {
+      throw { msg: e.response.data.msg };
+    }
+  };
+};
+
+export const actionClearDetails = () => {
+  return async function (dispatch) {
+    dispatch(clearDetails());
   };
 };
 
