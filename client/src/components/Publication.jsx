@@ -40,16 +40,24 @@ export default function Publication({ product, owner, update }) {
   };
 
   return (
-    <div
-      className="publication"
-      onClick={() => navigate(`/details/${product._id}`)}
-    >
-      <img src="/img/noImage.png" alt="img" />
-      <div className="data">
-        <h2>{product.title}</h2>
-        <p>stock: {product.stock}</p>
-        <p>sold: {product.quantitySold}</p>
-        <h3>price: ${product.price}</h3>
+    <div className="card">
+      <div
+        className="publication"
+        onClick={() => navigate(`/details/${product._id}`)}
+      >
+        <img src="/img/noImage.png" alt="img" />
+        <div className="data">
+          <h2>{product.title}</h2>
+          <h4>
+            {product.category} - {product.subCategory}
+          </h4>
+          <p>stock: {product.stock}</p>
+          <p>sold: {product.quantitySold}</p>
+          <div>
+            <h3>price: ${product.price}</h3>
+            {product.stock < 1 && <p className="empty">OUT OF STOCK</p>}
+          </div>
+        </div>
       </div>
       {owner && (
         <div className="actions">

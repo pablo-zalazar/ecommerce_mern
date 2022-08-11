@@ -7,6 +7,7 @@ import {
   getMyPublications,
   updatePublication,
   getDetails,
+  buyProduct,
 } from "../controllers/publicationController.js";
 import checkAuth from "../middleware/checkAuth.js";
 
@@ -17,7 +18,7 @@ router.get("/:id", checkAuth, getPublication);
 router.get("/myPublications/:id", checkAuth, getMyPublications);
 router.delete("/delete/:id", checkAuth, deletePublication);
 router.put("/update/:id", checkAuth, updatePublication);
+router.get("/buy/:id", checkAuth, buyProduct);
 
 router.get("/details/:id", getDetails);
-
 export default router;

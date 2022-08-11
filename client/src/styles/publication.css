@@ -1,5 +1,9 @@
-.publication {
+.card {
   position: relative;
+  max-width: 600px;
+}
+
+.card .publication {
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -8,13 +12,13 @@
   border: 1px solid black;
 }
 
-.publication img {
+.card .publication img {
   width: 100px;
   height: 100px;
   margin: 0 auto;
 }
 
-.publication .data {
+.card .publication .data {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -22,33 +26,45 @@
   border: 1px soldi black;
 }
 
-.publication .actions {
+.card .publication .data div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card .actions {
   position: absolute;
   top: 5px;
   right: 5px;
   display: flex;
   gap: 5px;
+  z-index: 10;
 }
 
-.publication .actions button {
+.card .actions button {
   padding: 1px;
 }
 
-.publication .actions button a {
+.card .actions button a {
   color: #000;
   text-decoration: none;
   font-size: 1rem;
 }
 
 @media screen and (min-width: 600px) {
-  .publication {
+  .card .publication {
     flex-direction: row;
-    max-width: 600px;
     justify-content: flex-start;
   }
 
-  .publication img {
+  .card .publication img {
     margin: 0;
-    flex-basis: 10%;
+    flex-basis: 20%;
+    max-width: 100px;
+  }
+
+  .card .publication .data div {
+    flex-direction: row;
+    align-items: center;
   }
 }

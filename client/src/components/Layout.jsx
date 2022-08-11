@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import "../styles/layout.css";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import "../styles/layout.css";
 import Header from "./Header";
 import Footer from "./Footer";
 import RegisterForm from "./RegisterForm";
@@ -23,11 +22,13 @@ export default function Layout({ children }) {
         showSettings={showSettings}
         setShowSettings={setShowSettings}
       />
-      <UserSettings
-        showSettings={showSettings}
-        setShowSettings={setShowSettings}
-      />
-      <div className="content">{children}</div>
+      <div className="content">
+        <UserSettings
+          showSettings={showSettings}
+          setShowSettings={setShowSettings}
+        />
+        <div className="children">{children}</div>
+      </div>
       <Footer />
 
       {modalRegister && (

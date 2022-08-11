@@ -127,3 +127,25 @@ export const getDetails = async (req, res) => {
     return req.status(400).json({ msg: e.message });
   }
 };
+
+export const buyProduct = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(req.user._id);
+    console.log(user);
+    const publication = await Publication.findById(id);
+    console.log(publication);
+    if (user.money > publication.price) {
+      user.money -= publication.price;
+      publication.stock -= 1;
+      publication.quantitySold += 1;
+      await user.save();
+      await publication.save();
+      return res.json(publication);
+    } else {
+      return res.status(400).json({ msg: "insufficient money" });
+    }
+  } catch (e) {
+    return req.status(400).json({ msg: e.message });
+  }
+};

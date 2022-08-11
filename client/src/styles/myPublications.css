@@ -81,9 +81,11 @@
 }
 
 .myPublications .cards {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  max-height: 800px;
+}
+
+.myPublications .cards > h2 {
+  margin-bottom: 20px;
 }
 
 @media screen and (min-width: 900px) {
@@ -97,5 +99,12 @@
 
   .myPublications .cards {
     flex-basis: 60%;
+  }
+
+  .myPublications .cards > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow-y: scroll;
   }
 }

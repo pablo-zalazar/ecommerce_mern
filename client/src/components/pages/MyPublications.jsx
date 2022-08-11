@@ -12,6 +12,7 @@ import {
   actionCreatePublication,
   actionUpdatePublication,
 } from "../../store/slices/publication";
+import { actionGetcategories } from "../../store/slices/category";
 
 import Publication from "../Publication";
 import Alert from "../Alert";
@@ -23,6 +24,8 @@ export default function MyPublications() {
   const [publicationUpdate, setPublicationUpdate] = useState({});
   const { user } = useSelector((state) => state.users);
   const { myPublications } = useSelector((state) => state.publications);
+  const { categories } = useSelector((state) => state.category);
+  const [category, setCategory] = useState("");
 
   let initialValues =
     Object.keys(publicationUpdate).length < 1
@@ -44,6 +47,10 @@ export default function MyPublications() {
           category: publicationUpdate.category,
           subCategory: publicationUpdate.subCategory,
         };
+
+  useEffect(() => {
+    dispatch(actionGetcategories());
+  }, []);
 
   useEffect(() => {
     const func = async () => {
@@ -69,7 +76,7 @@ export default function MyPublications() {
       .min(1, "Price must be greater than 0")
       .required(required),
     category: Yup.string().required(required),
-    subCategory: Yup.string(),
+    subCategory: Yup.string().required(required),
   });
 
   const update = async (publication) => {
@@ -182,38 +189,58 @@ export default function MyPublications() {
                 <label htmlFor="category">Category</label>
                 <Field name="category" id="category" as="select">
                   <option value="">Select</option>
-                  <option value="category 1">category 1</option>
-                  <option value="category 2">category 2</option>
-                  <option value="category 3">category 3</option>
-                  <option value="category 4">category 4</option>
-                  <option value="category 5">category 5</option>
+                  {Object.keys(categories).length > 0 &&
+                    categories?.map((cat) => (
+                      <option key={cat._id} value={cat.name}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  <option value="Other">Other</option>
                 </Field>
                 <p className="error">
                   <ErrorMessage name="category" />
                 </p>
               </div>
-              <div>
-                <label htmlFor="subCategory">subCategory</label>
-                <Field name="subCategory" id="subCategory" as="select">
-                  <option value="">Select</option>
-                </Field>
-                <p className="error">
-                  <ErrorMessage name="subCategory" />
-                </p>
-              </div>
+
+              {category !== props.values.category
+                ? (props.values.subCategory = "")
+                : null}
+              {setCategory(props.values.category)}
+
+              {props.values.category !== "" && (
+                <div>
+                  <label htmlFor="subCategory">subCategory</label>
+                  <Field name="subCategory" id="subCategory" as="select">
+                    <option value="">Select</option>
+                    {categories?.map(
+                      (cat) =>
+                        cat.name === props.values.category &&
+                        cat.subCategories.map((subCat) => (
+                          <option key={subCat}>{subCat}</option>
+                        ))
+                    )}
+                    <option value="Other">Other</option>
+                  </Field>
+
+                  <p className="error">
+                    <ErrorMessage name="subCategory" />
+                  </p>
+                </div>
+              )}
               <input type="submit" value={create ? "create" : "update"} />
             </Form>
           )}
         </Formik>
       </section>
 
-      <section className="cards">
+      <div className="cards">
         <h2>Publications</h2>
-
-        {myPublications?.map((p) => (
-          <Publication key={p._id} product={p} owner={true} update={update} />
-        ))}
-      </section>
+        <div>
+          {myPublications?.map((p) => (
+            <Publication key={p._id} product={p} owner={true} update={update} />
+          ))}
+        </div>
+      </div>
       <ToastContainer />
     </div>
   );

@@ -5,6 +5,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import publicationRoutes from "./routes/publicationsRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 const app = express();
 app.use(express.json());
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 // Routing
 app.use("/api/users", userRoutes);
 app.use("/api/publications", publicationRoutes);
+app.use("/api/categories", categoryRoutes);
 
 const PORT = process.env.PORT || 4000;
 

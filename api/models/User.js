@@ -24,6 +24,10 @@ const userSchema = mongoose.Schema(
       trim: true,
       unique: true,
     },
+    money: {
+      type: Number,
+      default: 0,
+    },
     birthday: {
       type: String,
       required: true,

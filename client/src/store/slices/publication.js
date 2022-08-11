@@ -1,10 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+import { actionAuthenticateUser } from "./user";
+
 export const publicationSlice = createSlice({
   name: "publication",
   initialState: {
     allPublications: [],
+    filterPublications: [],
     myPublications: [],
     details: {},
     search: "",
@@ -13,6 +16,10 @@ export const publicationSlice = createSlice({
   reducers: {
     allPublications: (state, action) => {
       state.allPublications = action.payload;
+      state.filterPublications = action.payload;
+    },
+    filterPublications: (state, action) => {
+      state.filterPublications = action.payload;
     },
     myPublications: (state, action) => {
       state.myPublications = action.payload;
@@ -31,6 +38,7 @@ export const publicationSlice = createSlice({
 
 export const {
   allPublications,
+  filterPublications,
   myPublications,
   setDetails,
   clearDetails,
@@ -51,6 +59,40 @@ export const actionGetAllPublications = () => {
       const { data } = await axios.get(URL, config);
       dispatch(allPublications(data));
     } catch (e) {
+      throw { msg: e.response.data.msg };
+    }
+  };
+};
+
+export const actionFilterPublications = (filters) => {
+  console.log(filters);
+  return async function (dispatch) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications`;
+    try {
+      const { data } = await axios.get(URL, config);
+      let arrayFilter = data;
+      if (filters.category !== "")
+        arrayFilter = arrayFilter.filter(
+          (p) => p.category === filters.category
+        );
+      if (filters.subCategory !== "")
+        arrayFilter = arrayFilter.filter(
+          (p) => p.subCategory === filters.subCategory
+        );
+      if (filters.state !== "")
+        arrayFilter = arrayFilter.filter((p) => p.state === filters.state);
+      if (filters.price.min !== "" && filters.price.max !== "")
+        arrayFilter = arrayFilter.filter(
+          (p) => p.price >= filters.price.min && p.price <= filters.price.max
+        );
+      dispatch(filterPublications(arrayFilter));
+    } catch (e) {
+      console.log(e);
       throw { msg: e.response.data.msg };
     }
   };
@@ -167,5 +209,25 @@ export const actionClearDetails = () => {
 export const actionClearMyPublications = () => {
   return async function (dispatch) {
     dispatch(logout());
+  };
+};
+
+export const actionBuy = (token, id) => {
+  return async function (dispatch) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications/buy/${id}`;
+    try {
+      await axios.get(URL, config);
+      dispatch(actionGetAllPublications());
+      dispatch(actionAuthenticateUser(token));
+      return { msg: "purchased product" };
+    } catch (e) {
+      throw { msg: e.response.data.msg };
+    }
   };
 };

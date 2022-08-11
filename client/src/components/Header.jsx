@@ -32,7 +32,11 @@ export default function Header({
         <Link to="/">
           <img src="/img/logo.png" alt="logo" />
         </Link>
-        {user.name && <h2>Hello {user.name}</h2>}
+        {user && (
+          <h2>
+            Hello {user.name} <p>${user.money}</p>
+          </h2>
+        )}
       </div>
       <div className="rightSide">
         <Searchbar />

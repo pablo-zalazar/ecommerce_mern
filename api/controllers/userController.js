@@ -58,6 +58,7 @@ export const authenticate = async (req, res) => {
     email: user.email,
     publications: user.publications,
     admin: user.admin,
+    money: user.money,
     token: jwtGenerate(user._id),
   });
 };
