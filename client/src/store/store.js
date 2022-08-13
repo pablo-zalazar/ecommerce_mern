@@ -7,6 +7,6 @@ export const store = configureStore({
   reducer: {
     users: userReducer,
     publications: publicationsReducer,
-    category: categoriesReducer,
+    categories: categoriesReducer,
   },
 });

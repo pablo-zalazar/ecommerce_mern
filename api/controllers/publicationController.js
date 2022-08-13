@@ -58,6 +58,7 @@ export const createPublication = async (req, res) => {
     req.user.publications.push(newPublication._id);
     await req.user.save();
     return res.json({ newPublication });
+    return;
   } catch (e) {
     return res.status(400).json({ msg: e.message });
   }

@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/header.css";
 import { useDispatch, useSelector } from "react-redux";
 import { GiHamburgerMenu, GiShoppingCart } from "react-icons/gi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Searchbar from "./Searchbar";
 import { useEffect } from "react";
 
@@ -15,6 +15,7 @@ export default function Header({
   setShowSettings,
 }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.users);
 
@@ -42,7 +43,10 @@ export default function Header({
         <Searchbar />
         <div className="buttons">
           <button>
-            <GiShoppingCart className="icon" />
+            <GiShoppingCart
+              className="icon"
+              onClick={() => navigate("/cart")}
+            />
           </button>
           <button>
             <GiHamburgerMenu

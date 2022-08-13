@@ -10,9 +10,9 @@ const checkAuth = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.id).select(
-        "-password -confirmed -token -createdAt -updatedAt -__v"
-      );
+      req.user = await User.findById(decoded.id)
+        .select("-password -confirmed -token -createdAt -updatedAt -__v")
+        .populate("cart");
       return next();
     } catch (e) {
       return res.status(400).json({ msg: " an error occurred" });

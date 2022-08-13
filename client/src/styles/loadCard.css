@@ -1,0 +1,57 @@
+.skeleton {
+  border-radius: var(--global-radius);
+  border: var(--global-border);
+  box-shadow: var(--global-box-shadow);
+  padding: 10px;
+  max-width: 600px;
+  overflow-y: hidden;
+}
+
+.skeleton .default,
+.skeleton .detail > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton .detail .info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.skeleton .img {
+  display: flex;
+  justify-content: center;
+}
+
+.skeleton .detail .description {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.skeleton .detail .description .buttons {
+  display: flex;
+  gap: 5px;
+}
+
+@media screen and (min-width: 600px) {
+  .skeleton .default {
+    flex-direction: row;
+  }
+
+  .skeleton .default .info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .skeleton .detail > div {
+    flex-direction: row;
+  }
+}

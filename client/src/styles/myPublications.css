@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow: hidden;
 }
 
 .myPublications .formContainer {
@@ -17,7 +18,7 @@
   text-align: center;
 }
 
-.formContainer form {
+/* .formContainer form {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -74,18 +75,21 @@
 
 .formContainer form a:hover {
   text-decoration: underline;
-}
+} */
 
 .formContainer .error {
   color: #f00;
 }
 
-.myPublications .cards {
-  max-height: 800px;
+.myPublications h2 {
+  margin-bottom: 20px;
 }
 
-.myPublications .cards > h2 {
-  margin-bottom: 20px;
+.myPublications .cards .cardsContainer > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
 }
 
 @media screen and (min-width: 900px) {
@@ -98,13 +102,12 @@
   }
 
   .myPublications .cards {
+    max-height: 800px;
     flex-basis: 60%;
+    overflow-y: hidden;
   }
 
-  .myPublications .cards > div {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    overflow-y: scroll;
+  .myPublications .cards .cardsContainer {
+    max-height: 800px;
   }
 }

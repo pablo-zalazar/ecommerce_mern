@@ -9,6 +9,7 @@ import VerifyUser from "./components/VerifyUser";
 import Layout from "./components/Layout";
 import MyPublications from "./components/pages/MyPublications";
 import Details from "./components/pages/Details";
+import Cart from "./components/pages/Cart";
 
 function App() {
   return (
@@ -23,6 +24,10 @@ function App() {
 
           <Route path="/myPublications" element={<VerifyUser />}>
             <Route index element={<MyPublications />} />
+          </Route>
+
+          <Route path="/cart" element={<VerifyUser />}>
+            <Route index element={<Cart />} />
           </Route>
         </Routes>
       </Layout>

@@ -50,6 +50,12 @@ const userSchema = mongoose.Schema(
         ref: "Publication",
       },
     ],
+    cart: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Publication",
+      },
+    ],
   },
   {
     timestamps: true,

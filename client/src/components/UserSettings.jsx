@@ -20,6 +20,11 @@ export default function UserSettings({ showSettings, setShowSettings }) {
   return Object.keys(user).length > 0 ? (
     <div className={showSettings ? "show" : "hidden"}>
       <div className="userSettings">
+        {user.admin && (
+          <div>
+            <Link to="#">Admin</Link>
+          </div>
+        )}
         <div>
           <Link to="#">Profile</Link>
         </div>

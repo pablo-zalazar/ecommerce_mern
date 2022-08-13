@@ -33,6 +33,9 @@ export const publicationSlice = createSlice({
     logout: (state) => {
       state.myPublications = [];
     },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
   },
 });
 
@@ -43,6 +46,7 @@ export const {
   setDetails,
   clearDetails,
   logout,
+  setLoading,
 } = publicationSlice.actions;
 
 export default publicationSlice.reducer;
@@ -86,13 +90,12 @@ export const actionFilterPublications = (filters) => {
         );
       if (filters.state !== "")
         arrayFilter = arrayFilter.filter((p) => p.state === filters.state);
-      if (filters.price.min !== "" && filters.price.max !== "")
-        arrayFilter = arrayFilter.filter(
-          (p) => p.price >= filters.price.min && p.price <= filters.price.max
-        );
+      if (filters.price.min !== "")
+        arrayFilter = arrayFilter.filter((p) => p.price >= filters.price.min);
+      if (filters.price.max !== "")
+        arrayFilter = arrayFilter.filter((p) => p.price <= filters.price.max);
       dispatch(filterPublications(arrayFilter));
     } catch (e) {
-      console.log(e);
       throw { msg: e.response.data.msg };
     }
   };
@@ -100,6 +103,7 @@ export const actionFilterPublications = (filters) => {
 
 export const actionGetMyPublications = (token, id) => {
   return async function (dispatch) {
+    dispatch(setLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -110,6 +114,7 @@ export const actionGetMyPublications = (token, id) => {
     try {
       const { data } = await axios.get(URL, config);
       dispatch(myPublications(data));
+      dispatch(setLoading(false));
     } catch (e) {
       throw { msg: e.response.data.msg };
     }
@@ -118,6 +123,7 @@ export const actionGetMyPublications = (token, id) => {
 
 export const actionCreatePublication = (values, token, id) => {
   return async function (dispatch) {
+    dispatch(setLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -126,7 +132,7 @@ export const actionCreatePublication = (values, token, id) => {
     };
     const URL = `${process.env.REACT_APP_BACKEND_URL}/publications`;
     try {
-      const { data } = await axios.post(
+      await axios.post(
         URL,
         {
           ...values,
@@ -136,6 +142,7 @@ export const actionCreatePublication = (values, token, id) => {
         config
       );
       dispatch(actionGetMyPublications(token, id));
+      dispatch(setLoading(false));
       return { msg: "Publication created" };
     } catch (e) {
       throw { msg: e.response.data.msg };
@@ -145,6 +152,7 @@ export const actionCreatePublication = (values, token, id) => {
 
 export const actionDeletePublication = (token, user_id, product_id) => {
   return async function (dispatch) {
+    dispatch(setLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -153,8 +161,9 @@ export const actionDeletePublication = (token, user_id, product_id) => {
     };
     const URL = `${process.env.REACT_APP_BACKEND_URL}/publications/delete/${product_id}`;
     try {
-      const { data } = await axios.delete(URL, config);
+      await axios.delete(URL, config);
       dispatch(actionGetMyPublications(token, user_id));
+      dispatch(setLoading(false));
       return { msg: "Publication deleted" };
     } catch (e) {
       throw { msg: e.response.data.msg };
@@ -164,6 +173,7 @@ export const actionDeletePublication = (token, user_id, product_id) => {
 
 export const actionUpdatePublication = (values, token, id) => {
   return async function (dispatch) {
+    dispatch(setLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -173,9 +183,8 @@ export const actionUpdatePublication = (values, token, id) => {
     const URL = `${process.env.REACT_APP_BACKEND_URL}/publications/update/${values._id}`;
     try {
       await axios.put(URL, values, config);
-      // dispatch(updatePublication(data.data));
-      // console.log(data);
       dispatch(actionGetMyPublications(token, id));
+      dispatch(setLoading(false));
       return { msg: "Publication updated" };
     } catch (e) {
       throw { msg: e.response.data.msg };
@@ -185,6 +194,7 @@ export const actionUpdatePublication = (values, token, id) => {
 
 export const actionGetDetails = (id) => {
   return async function (dispatch) {
+    dispatch(setLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -194,6 +204,7 @@ export const actionGetDetails = (id) => {
     try {
       const { data } = await axios.get(URL, config);
       dispatch(setDetails(data));
+      dispatch(setLoading(false));
     } catch (e) {
       throw { msg: e.response.data.msg };
     }

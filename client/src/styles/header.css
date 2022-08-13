@@ -1,10 +1,11 @@
 header {
-  background-color: lightslategray;
+  background-color: var(--global--color-hover);
   padding: 10px;
   display: flex;
   flex-direction: column;
   gap: 10px;
   z-index: 10;
+  color: #fff;
 }
 
 header .leftSide {
@@ -28,7 +29,7 @@ header .rightSide {
 header .buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 20px;
   align-items: center;
 }
 
@@ -36,10 +37,14 @@ header .buttons button {
   background: none;
   border: none;
   font-weight: 700;
+  color: #fff;
+}
+
+header .buttons button .icon {
+  font-size: 2rem;
 }
 
 header .buttons button:hover {
-  text-decoration: underline;
   cursor: pointer;
 }
 

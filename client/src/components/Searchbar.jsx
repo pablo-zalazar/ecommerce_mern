@@ -1,4 +1,5 @@
 import React from "react";
+import "../styles/forms.css";
 import "../styles/searchbar.css";
 import { useState } from "react";
 

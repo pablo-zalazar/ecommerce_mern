@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../../styles/home.css";
+import { AiOutlineArrowRight } from "react-icons/ai";
 
 import {
   actionGetAllPublications,
@@ -13,9 +14,10 @@ import Publication from "../Publication";
 export default function Home() {
   const dispatch = useDispatch();
   const { filterPublications } = useSelector((state) => state.publications);
-  const { categories } = useSelector((state) => state.category);
+  const { categories } = useSelector((state) => state.categories);
   const { user } = useSelector((state) => state.users);
   const [priceFilter, setPriceFIlter] = useState({ min: "", max: "" });
+  const [error, setError] = useState("");
 
   const [filter, setFilter] = useState({
     category: "",
@@ -28,7 +30,6 @@ export default function Home() {
   useEffect(() => {
     if (!firstMount) dispatch(actionFilterPublications(filter));
     else setFirstMount(false);
-    // console.log(filter);
   }, [filter]);
 
   useEffect(() => {
@@ -39,27 +40,30 @@ export default function Home() {
     getPublications();
   }, []);
 
-  // useEffect(() => {
-  //   dispatch(actionFilterPublications(filter));
-  // }, [filter]);
-
   const handleFilter = (arr) => {
+    console.log(arr);
+    console.log(priceFilter);
     if (arr[0] === "category")
       setFilter({ ...filter, category: arr[1], subCategory: "" });
     if (arr[0] === "subCategory")
       setFilter({ ...filter, category: arr[1], subCategory: arr[2] });
     if (arr[0] === "state") setFilter({ ...filter, state: arr[1] });
     if (arr[0] === "price") {
-      if (
-        (priceFilter.min >= 0 || priceFilter.min === "") &&
-        (priceFilter.max >= 0 || priceFilter.max === "") &&
-        priceFilter.min <= priceFilter.max
-      ) {
-        setFilter({
-          ...filter,
-          price: { min: priceFilter.min, max: priceFilter.max },
-        });
-        setPriceFIlter({ min: "", max: "" });
+      if (!isNaN(priceFilter.min) && !isNaN(priceFilter.max)) {
+        console.log("b");
+        if (priceFilter.min <= priceFilter.max) {
+          console.log("v");
+          setFilter({
+            ...filter,
+            price: { min: priceFilter.min, max: priceFilter.max },
+          });
+          setPriceFIlter({ min: "", max: "" });
+          setError("");
+        } else {
+          setError("max value must be grater than min value");
+        }
+      } else {
+        setError("Invalid values");
       }
     }
   };
@@ -78,7 +82,9 @@ export default function Home() {
       <section className="filters">
         <h3>{filterPublications.length} Results</h3>
         <h2>Filters</h2>
-        <button onClick={() => handleReset()}>reset</button>
+        <button className="reset" onClick={() => handleReset()}>
+          reset
+        </button>
         <h3>Categories</h3>
         {Object.keys(categories).length > 0 &&
           categories?.map((cat) => (
@@ -90,23 +96,26 @@ export default function Home() {
               >
                 {cat.name}
               </h4>
-              {cat?.subCategories?.map((subCat, i) => (
-                <p
-                  key={cat._id + i}
-                  onClick={() =>
-                    handleFilter(["subCategory", cat.name, subCat])
-                  }
-                  className={
-                    filter.subCategory === subCat
-                      ? filter.category === cat.name
-                        ? "active"
-                        : ""
-                      : ""
-                  }
-                >
-                  {subCat}
-                </p>
-              ))}
+              {cat?.subCategories?.map(
+                (subCat, i) =>
+                  cat.name !== "Other" && (
+                    <p
+                      key={cat._id + i}
+                      onClick={() =>
+                        handleFilter(["subCategory", cat.name, subCat])
+                      }
+                      className={
+                        filter.subCategory === subCat
+                          ? filter.category === cat.name
+                            ? "active"
+                            : ""
+                          : ""
+                      }
+                    >
+                      {subCat}
+                    </p>
+                  )
+              )}
             </div>
           ))}
 
@@ -132,8 +141,11 @@ export default function Home() {
             }
             placeholder="max"
           />
-          <button onClick={() => handleFilter(["price"])}>S</button>
+          <button onClick={() => handleFilter(["price"])}>
+            <AiOutlineArrowRight />
+          </button>
         </div>
+        <p>{error}</p>
       </section>
       <section className="cards">
         {filterPublications.length > 0 ? (

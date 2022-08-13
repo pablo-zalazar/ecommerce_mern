@@ -1,6 +1,14 @@
 .card {
   position: relative;
   max-width: 600px;
+  border: var(--global-border);
+  border-radius: var(--global-radius);
+  background-color: #fff;
+  box-shadow: var(--global-box-shadow);
+}
+
+.card:hover {
+  border: var(--global-border-hover);
 }
 
 .card .publication {
@@ -9,12 +17,11 @@
   flex-direction: column;
   justify-content: center;
   gap: 20px;
-  border: 1px solid black;
 }
 
 .card .publication img {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   margin: 0 auto;
 }
 
@@ -24,12 +31,6 @@
   justify-content: flex-start;
   gap: 10px;
   border: 1px soldi black;
-}
-
-.card .publication .data div {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
 
 .card .actions {
@@ -59,12 +60,7 @@
 
   .card .publication img {
     margin: 0;
-    flex-basis: 20%;
-    max-width: 100px;
-  }
-
-  .card .publication .data div {
-    flex-direction: row;
-    align-items: center;
+    /* flex-basis: 20%; */
+    /* max-width: 200px; */
   }
 }

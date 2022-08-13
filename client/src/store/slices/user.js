@@ -137,3 +137,83 @@ export const actionAuthenticateUser = (token) => {
     }
   };
 };
+
+export const actionAddToCart = (token, id) => {
+  return async function (dispatch) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/addToCart/${id}`;
+    try {
+      const { data } = await axios.get(URL, config);
+
+      dispatch(actionAuthenticateUser(token));
+      return { msg: "product added to cart" };
+    } catch (e) {
+      throw { msg: e.response.data.msg };
+    }
+  };
+};
+
+export const actionRemoveFromCart = (token, id) => {
+  return async function (dispatch) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/removeFromCart/${id}`;
+    try {
+      const { data } = await axios.get(URL, config);
+      console.log(data);
+      dispatch(actionAuthenticateUser(token));
+      return { msg: "product romved from cart" };
+    } catch (e) {
+      throw { msg: e.response.data.msg };
+    }
+  };
+};
+
+export const actionBuyCart = (token, total) => {
+  return async function (dispatch) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/buyCart`;
+    try {
+      const { data } = await axios.post(URL, { total }, config);
+      console.log(data);
+      dispatch(actionAuthenticateUser(token));
+      return { msg: "purchased products" };
+    } catch (e) {
+      throw { msg: e.response.data.msg };
+    }
+  };
+};
+
+export const actionClearCart = (token, total) => {
+  return async function (dispatch) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/clearCart`;
+    try {
+      const { data } = await axios.post(URL, { total }, config);
+      console.log(data);
+      dispatch(actionAuthenticateUser(token));
+      return { msg: "empty cart" };
+    } catch (e) {
+      throw { msg: e.response.data.msg };
+    }
+  };
+};

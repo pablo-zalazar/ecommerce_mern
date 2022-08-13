@@ -1,6 +1,7 @@
 import React from "react";
 import ReactModal from "react-modal";
 import "../styles/modal.css";
+import "../styles/forms.css";
 
 export default function Modal({ showModal, children }) {
   return (

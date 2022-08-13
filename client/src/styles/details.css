@@ -5,7 +5,6 @@
   justify-content: center;
   align-items: center;
   padding: 10px;
-  /* min-height: 100vh; */
 }
 
 .details > div {
@@ -16,16 +15,21 @@
   border: 1px solid black;
   gap: 10px;
   padding: 10px;
+  background-color: #fff;
+  border: var(--global-border-hover);
+  border-radius: var(--global-radius);
+  box-shadow: var(--global-box-shadow);
 }
 
 .details .info {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 10px;
 }
 
 .details .info img {
+  width: 150px;
+  height: 150px;
   margin: 0 auto;
 }
 
@@ -37,9 +41,27 @@
   gap: 5px;
 }
 
-.details > div button {
-  margin: 0 auto;
-  padding: 5px;
+.details .actions {
+  display: flex;
+  gap: 5px;
+  overflow: hidden;
+}
+
+.details .actions button {
+  position: relative;
+  width: 100px;
+  padding: 10px;
+  text-align: center;
+  border: var(--global-border);
+  border-radius: var() --global-radius;
+}
+
+.details .actions button:hover {
+  /* top: 2px; */
+}
+
+.details .actions button:active {
+  top: 2px;
 }
 
 @media screen and (min-width: 900px) {

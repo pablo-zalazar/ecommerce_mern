@@ -9,9 +9,11 @@ import {
   actionDeletePublication,
   actionGetDetails,
 } from "../store/slices/publication";
+import { actionRemoveFromCart } from "../store/slices/user";
+
 import Alert from "./Alert";
 
-export default function Publication({ product, owner, update }) {
+export default function Publication({ product, owner, update, cart }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -39,6 +41,29 @@ export default function Publication({ product, owner, update }) {
     });
   };
 
+  const handleRemoveCart = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, remove it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          const { msg } = await dispatch(
+            actionRemoveFromCart(token, product._id)
+          );
+          Alert("error", msg);
+        } catch (e) {
+          console.log(e.message);
+        }
+      }
+    });
+  };
+
   return (
     <div className="card">
       <div
@@ -51,12 +76,11 @@ export default function Publication({ product, owner, update }) {
           <h4>
             {product.category} - {product.subCategory}
           </h4>
+          <p>{product.state}</p>
           <p>stock: {product.stock}</p>
           <p>sold: {product.quantitySold}</p>
-          <div>
-            <h3>price: ${product.price}</h3>
-            {product.stock < 1 && <p className="empty">OUT OF STOCK</p>}
-          </div>
+
+          <h3>price: ${product.price}</h3>
         </div>
       </div>
       {owner && (
@@ -65,6 +89,13 @@ export default function Publication({ product, owner, update }) {
             <IoPencil />
           </button>
           <button onClick={() => handleDelete()}>
+            <IoTrash />
+          </button>
+        </div>
+      )}
+      {cart && (
+        <div className="actions">
+          <button onClick={() => handleRemoveCart()}>
             <IoTrash />
           </button>
         </div>

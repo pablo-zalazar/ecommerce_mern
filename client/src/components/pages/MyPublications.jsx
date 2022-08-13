@@ -1,6 +1,7 @@
 import React from "react";
 import "../../styles/myPublications.css";
-import { useEffect } from "react";
+import "../../styles/forms.css";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { Formik, Form, ErrorMessage, Field } from "formik";
@@ -12,11 +13,12 @@ import {
   actionCreatePublication,
   actionUpdatePublication,
 } from "../../store/slices/publication";
+
 import { actionGetcategories } from "../../store/slices/category";
 
 import Publication from "../Publication";
 import Alert from "../Alert";
-import { useState } from "react";
+import LoadCard from "../LoadCard";
 
 export default function MyPublications() {
   const dispatch = useDispatch();
@@ -24,8 +26,11 @@ export default function MyPublications() {
   const [publicationUpdate, setPublicationUpdate] = useState({});
   const { user } = useSelector((state) => state.users);
   const { myPublications } = useSelector((state) => state.publications);
-  const { categories } = useSelector((state) => state.category);
+  const { categories } = useSelector((state) => state.categories);
+  const { loading } = useSelector((state) => state.publications);
   const [category, setCategory] = useState("");
+
+  console.log(loading);
 
   let initialValues =
     Object.keys(publicationUpdate).length < 1
@@ -195,7 +200,6 @@ export default function MyPublications() {
                         {cat.name}
                       </option>
                     ))}
-                  <option value="Other">Other</option>
                 </Field>
                 <p className="error">
                   <ErrorMessage name="category" />
@@ -219,7 +223,6 @@ export default function MyPublications() {
                           <option key={subCat}>{subCat}</option>
                         ))
                     )}
-                    <option value="Other">Other</option>
                   </Field>
 
                   <p className="error">
@@ -235,10 +238,21 @@ export default function MyPublications() {
 
       <div className="cards">
         <h2>Publications</h2>
-        <div>
-          {myPublications?.map((p) => (
-            <Publication key={p._id} product={p} owner={true} update={update} />
-          ))}
+        <div className="cardsContainer">
+          {loading ? (
+            <LoadCard />
+          ) : (
+            <div>
+              {myPublications?.map((p) => (
+                <Publication
+                  key={p._id}
+                  product={p}
+                  owner={true}
+                  update={update}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
       <ToastContainer />
