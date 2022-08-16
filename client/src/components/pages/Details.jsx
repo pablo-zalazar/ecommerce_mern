@@ -70,8 +70,12 @@ export default function Details() {
             Object.keys(details).length > 0 &&
             user?._id !== details?.owner._id && (
               <div className="actions">
-                <button onClick={() => handleBuy()}>Buy now</button>
-                <button onClick={() => addToCart()}>Add to cart</button>
+                <button className="btnPrimary" onClick={() => handleBuy()}>
+                  Buy now
+                </button>
+                <button className="btnSecondary" onClick={() => addToCart()}>
+                  Add to cart
+                </button>
               </div>
             )}
         </div>

@@ -1,5 +1,7 @@
 import React from "react";
 import * as Yup from "yup";
+import "../../styles/changePassword.css";
+import "../../styles/forms.css";
 import { useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -15,6 +17,7 @@ export default function ForgetPassword() {
     try {
       const data = await dispatch(actionForgetPassword(values));
       Alert("success", data.msg);
+      resetForm();
     } catch (e) {
       Alert("error", e);
     }
@@ -27,7 +30,8 @@ export default function ForgetPassword() {
   });
 
   return (
-    <div>
+    <div className="changePassword">
+      <h2>Forget password</h2>
       <Formik
         initialValues={{ email: "" }}
         validationSchema={createSchema}
@@ -39,7 +43,9 @@ export default function ForgetPassword() {
           <div>
             <label htmlFor="email">Email</label>
             <Field name="email" id="email" type="email" placeholder="email" />
-            <ErrorMessage name="email" />
+            <p className="error">
+              <ErrorMessage name="email" />
+            </p>
           </div>
           <input type="submit" value="Send" />
         </Form>

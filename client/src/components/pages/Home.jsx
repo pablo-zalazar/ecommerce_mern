@@ -7,42 +7,65 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 import {
   actionGetAllPublications,
   actionFilterPublications,
+  actionClearSearch,
 } from "../../store/slices/publication";
 import { actionGetcategories } from "../../store/slices/category";
 import Publication from "../Publication";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { filterPublications } = useSelector((state) => state.publications);
+  const { filterPublications, search } = useSelector(
+    (state) => state.publications
+  );
   const { categories } = useSelector((state) => state.categories);
   const { user } = useSelector((state) => state.users);
   const [priceFilter, setPriceFIlter] = useState({ min: "", max: "" });
+  const [publications, setPublications] = useState([]);
   const [error, setError] = useState("");
-
+  const [firstMount, setFirstMount] = useState(true);
   const [filter, setFilter] = useState({
     category: "",
     subCategory: "",
     state: "",
     price: { min: "", max: "" },
+    search: "",
   });
-  const [firstMount, setFirstMount] = useState(true);
 
   useEffect(() => {
-    if (!firstMount) dispatch(actionFilterPublications(filter));
+    dispatch(actionGetAllPublications());
+    dispatch(actionGetcategories());
+
+    return () => dispatch(actionClearSearch());
+  }, []);
+
+  useEffect(() => {
+    setPublications(filterPublications.filter((p) => p.owner !== user._id));
+  }, [filterPublications, user]);
+
+  useEffect(() => {
+    setFilter({
+      category: "",
+      subCategory: "",
+      state: "",
+      price: { min: "", max: "" },
+      search: "",
+    });
+  }, [search]);
+
+  useEffect(() => {
+    if (!firstMount) dispatch(actionFilterPublications({ ...filter, search }));
     else setFirstMount(false);
   }, [filter]);
 
-  useEffect(() => {
-    async function getPublications() {
-      await dispatch(actionGetAllPublications());
-      await dispatch(actionGetcategories());
-    }
-    getPublications();
-  }, []);
+  // useEffect(() => {
+  //   async function getPublications() {
+  //     await dispatch(actionGetAllPublications());
+  //     await dispatch(actionGetcategories());
+  //   }
+  //   getPublications();
+  // }, []);
 
   const handleFilter = (arr) => {
-    console.log(arr);
-    console.log(priceFilter);
     if (arr[0] === "category")
       setFilter({ ...filter, category: arr[1], subCategory: "" });
     if (arr[0] === "subCategory")
@@ -50,12 +73,26 @@ export default function Home() {
     if (arr[0] === "state") setFilter({ ...filter, state: arr[1] });
     if (arr[0] === "price") {
       if (!isNaN(priceFilter.min) && !isNaN(priceFilter.max)) {
-        console.log("b");
-        if (priceFilter.min <= priceFilter.max) {
-          console.log("v");
+        if (priceFilter.max === "" || priceFilter.min <= priceFilter.max) {
           setFilter({
             ...filter,
-            price: { min: priceFilter.min, max: priceFilter.max },
+            price: {
+              min: priceFilter.min,
+              max: priceFilter.max,
+            },
+          });
+          setPriceFIlter({ min: "", max: "" });
+          setError("");
+        } else if (
+          priceFilter.max !== "" ||
+          priceFilter.min <= priceFilter.max
+        ) {
+          setFilter({
+            ...filter,
+            price: {
+              min: priceFilter.min,
+              max: priceFilter.max,
+            },
           });
           setPriceFIlter({ min: "", max: "" });
           setError("");
@@ -68,20 +105,72 @@ export default function Home() {
     }
   };
 
+  const handleRemoveFilter = (type) => {
+    if (type === "category")
+      setFilter({ ...filter, category: "", subCategory: "" });
+    if (type === "subCategory") setFilter({ ...filter, subCategory: "" });
+    if (type === "state") setFilter({ ...filter, state: "" });
+    if (type === "min")
+      setFilter({ ...filter, price: { min: "", max: filter.price.max } });
+    if (type === "max")
+      setFilter({ ...filter, price: { min: filter.price.min, max: "" } });
+    if (type === "allPrice")
+      setFilter({ ...filter, price: { min: "", max: "" } });
+  };
+
   const handleReset = () => {
+    dispatch(actionClearSearch());
     setFilter({
       category: "",
       subCategory: "",
       state: "",
       price: { min: "", max: "" },
+      search: "",
     });
   };
 
   return (
     <div className="main">
       <section className="filters">
-        <h3>{filterPublications.length} Results</h3>
+        <h3>{publications.length} Results</h3>
         <h2>Filters</h2>
+        {search && <h3>{search}</h3>}
+        <div className="filtersName">
+          {filter.category && (
+            <p onClick={() => handleRemoveFilter("category")}>
+              {filter.category} <span>x</span>
+            </p>
+          )}
+          {filter.subCategory && (
+            <p onClick={() => handleRemoveFilter("subCategory")}>
+              {filter.subCategory} <span>x</span>
+            </p>
+          )}
+          {filter.state && (
+            <p onClick={() => handleRemoveFilter("state")}>
+              {filter.state} <span>x</span>
+            </p>
+          )}
+          {filter.price.min && filter.price.max ? (
+            <p
+              onClick={() => {
+                handleRemoveFilter("allPrice");
+              }}
+            >
+              ${filter.price.min} - ${filter.price.max} <span>x</span>
+            </p>
+          ) : filter.price.min ? (
+            <p onClick={() => handleRemoveFilter("min")}>
+              from ${filter.price.min} <span>x</span>
+            </p>
+          ) : (
+            filter.price.max && (
+              <p onClick={() => handleRemoveFilter("max")}>
+                up ${filter.price.max} <span>x</span>
+              </p>
+            )
+          )}
+        </div>
         <button className="reset" onClick={() => handleReset()}>
           reset
         </button>
@@ -141,20 +230,23 @@ export default function Home() {
             }
             placeholder="max"
           />
-          <button onClick={() => handleFilter(["price"])}>
-            <AiOutlineArrowRight />
-          </button>
+          {priceFilter.min === "" && priceFilter.max === "" ? (
+            <button disabled onClick={() => handleFilter(["price"])}>
+              <AiOutlineArrowRight />
+            </button>
+          ) : (
+            <button onClick={() => handleFilter(["price"])}>
+              <AiOutlineArrowRight />
+            </button>
+          )}
         </div>
         <p>{error}</p>
       </section>
       <section className="cards">
-        {filterPublications.length > 0 ? (
-          filterPublications?.map(
-            (publication) =>
-              publication.owner !== user._id && (
-                <Publication key={publication._id} product={publication} />
-              )
-          )
+        {publications.length > 0 ? (
+          publications?.map((publication) => (
+            <Publication key={publication._id} product={publication} />
+          ))
         ) : (
           <p>No hay productos</p>
         )}

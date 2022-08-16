@@ -43,13 +43,25 @@
 }
 
 .card .actions button {
-  padding: 1px;
+  font-size: 1rem;
+  font-weight: 700;
+  width: 30px;
+  height: 30px;
+  border: var(--global-border);
+  border-radius: var(--global-radius);
+  background-color: var(--global--color);
+  color: #fff;
 }
 
-.card .actions button a {
-  color: #000;
-  text-decoration: none;
-  font-size: 1rem;
+.card .actions button:hover {
+  cursor: pointer;
+  border: var(--global-border-hover);
+  background-color: var(--global--color-hover);
+}
+
+.card .actions button:active {
+  top: 12px;
+  background-color: var(--global--color-active);
 }
 
 @media screen and (min-width: 600px) {

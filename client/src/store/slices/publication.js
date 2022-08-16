@@ -36,6 +36,12 @@ export const publicationSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setSearch: (state, action) => {
+      state.search = action.payload;
+    },
+    clearSearch: (state) => {
+      state.search = "";
+    },
   },
 });
 
@@ -47,6 +53,8 @@ export const {
   clearDetails,
   logout,
   setLoading,
+  setSearch,
+  clearSearch,
 } = publicationSlice.actions;
 
 export default publicationSlice.reducer;
@@ -68,8 +76,29 @@ export const actionGetAllPublications = () => {
   };
 };
 
+export const actionSetSearch = (data) => {
+  return async function (dispatch) {
+    dispatch(setSearch(data.toLowerCase()));
+    dispatch(
+      actionFilterPublications({
+        category: "",
+        subCategory: "",
+        state: "",
+        price: { min: "", max: "" },
+        search: data.toLowerCase(),
+      })
+    );
+  };
+};
+
+export const actionClearSearch = () => {
+  return async function (dispatch) {
+    dispatch(clearSearch());
+  };
+};
+
 export const actionFilterPublications = (filters) => {
-  console.log(filters);
+  // console.log(filters);
   return async function (dispatch) {
     const config = {
       headers: {
@@ -94,9 +123,15 @@ export const actionFilterPublications = (filters) => {
         arrayFilter = arrayFilter.filter((p) => p.price >= filters.price.min);
       if (filters.price.max !== "")
         arrayFilter = arrayFilter.filter((p) => p.price <= filters.price.max);
+      if (filters.search !== "") {
+        arrayFilter = arrayFilter.filter((p) =>
+          p.title.toLowerCase().split(" ").includes(filters.search)
+        );
+      }
       dispatch(filterPublications(arrayFilter));
     } catch (e) {
-      throw { msg: e.response.data.msg };
+      console.log(e);
+      // throw { msg: e.response.data.msg };
     }
   };
 };

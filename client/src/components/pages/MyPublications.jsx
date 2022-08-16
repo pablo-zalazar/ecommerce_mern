@@ -30,8 +30,6 @@ export default function MyPublications() {
   const { loading } = useSelector((state) => state.publications);
   const [category, setCategory] = useState("");
 
-  console.log(loading);
-
   let initialValues =
     Object.keys(publicationUpdate).length < 1
       ? {

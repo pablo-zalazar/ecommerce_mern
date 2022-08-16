@@ -53,15 +53,38 @@
   padding: 10px;
   text-align: center;
   border: var(--global-border);
-  border-radius: var() --global-radius;
+  border-radius: var(--global-radius);
+  font-weight: 700;
 }
 
 .details .actions button:hover {
-  /* top: 2px; */
+  cursor: pointer;
+  border: var(--global-border-hover);
 }
 
-.details .actions button:active {
-  top: 2px;
+.details .actions button.btnPrimary {
+  background-color: var(--global--color);
+  color: #fff;
+}
+
+.details .actions button.btnPrimary:hover {
+  background-color: var(--global--color-hover);
+}
+
+.details .actions button.btnPrimary:active {
+  background-color: var(--global--color-active);
+}
+
+.details .actions .btnSecondary {
+  background-color: #d3d3d3;
+}
+
+.details .actions .btnSecondary:hover {
+  background-color: #c3c3c3;
+}
+
+.details .actions .btnSecondary:active {
+  background-color: #bababa;
 }
 
 @media screen and (min-width: 900px) {

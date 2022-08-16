@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import "../../styles/cart.css";
 
 import Publication from "../Publication";
 import Alert from "../Alert";
@@ -16,7 +17,6 @@ export default function Cart() {
         .map((p) => p.price)
         .reduce((current, next) => current + next, 0);
       setTotal(amount);
-      console.log("asd");
     }
   }, [user]);
 
@@ -42,25 +42,33 @@ export default function Cart() {
 
   return (
     <div className="cart">
-      <h2>Cart</h2>
       <div className="leftSide">
-        {Object.keys(user).length > 0 ? (
-          user.cart.length > 0 ? (
-            user.cart.map((p, i) => (
-              <Publication key={i} product={p} owner={false} cart={true} />
-            ))
+        <h2>Cart</h2>
+        <div className="cardsContainer">
+          {Object.keys(user).length > 0 ? (
+            user.cart.length > 0 ? (
+              user.cart.map((p, i) => (
+                <Publication key={i} product={p} owner={false} cart={true} />
+              ))
+            ) : (
+              <p>No hay nada</p>
+            )
           ) : (
-            <p>No hay nada</p>
-          )
-        ) : (
-          <p>Cargando</p>
-        )}
+            <p>Cargando</p>
+          )}
+        </div>
       </div>
       {Object.keys(user).length > 0 && (
         <div className="rightSide">
           <h2>Total: ${total}</h2>
-          <button onClick={() => handleBuyCart()}>Buy all</button>
-          <button onClick={() => clearCart()}>Clear cart</button>
+          <div className="actions">
+            <button className="btnPrimary" onClick={() => handleBuyCart()}>
+              Buy all
+            </button>
+            <button className="btnSecondary" onClick={() => clearCart()}>
+              Clear cart
+            </button>
+          </div>
         </div>
       )}
     </div>

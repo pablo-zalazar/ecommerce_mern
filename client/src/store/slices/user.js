@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const userSlice = createSlice({
   name: "user",
-  initialState: { user: {}, error: "" },
+  initialState: { user: {}, error: "", loading: false },
   reducers: {
     login: (state, action) => {
       state.user = action.payload;
@@ -11,10 +11,13 @@ export const userSlice = createSlice({
     logout: (state) => {
       state.user = {};
     },
+    setLoading: (state, action) => {
+      state.loading = action.payload;
+    },
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, setLoading } = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -91,10 +94,12 @@ export const actionForgetPassword = (values) => {
 };
 
 export const actionCheckToken = (token) => {
-  return async function () {
+  return async function (dispatch) {
+    dispatch(setLoading(true));
     const URL = `${process.env.REACT_APP_BACKEND_URL}/users/forget-password/${token}`;
     try {
       const { data } = await axios.get(URL);
+      dispatch(setLoading(false));
       return data;
     } catch (e) {
       throw e.response.data.msg;

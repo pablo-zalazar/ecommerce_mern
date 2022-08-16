@@ -5,7 +5,6 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 export default function LoadCard({ detail }) {
-  console.log(detail);
   return (
     <SkeletonTheme baseColor="#AEAEAE" highlightColor="#DFDFDF">
       <div className="skeleton">
