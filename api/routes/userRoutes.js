@@ -11,6 +11,7 @@ import {
   removeFromCart,
   buyCart,
   clearCart,
+  getTransactions,
 } from "../controllers/userController.js";
 import checkAuth from "../middleware/checkAuth.js";
 
@@ -27,5 +28,6 @@ router.get("/addToCart/:id", checkAuth, addToCart);
 router.get("/removeFromCart/:id", checkAuth, removeFromCart);
 router.post("/buyCart", checkAuth, buyCart);
 router.post("/clearCart", checkAuth, clearCart);
+router.get("/transactions", checkAuth, getTransactions);
 
 export default router;

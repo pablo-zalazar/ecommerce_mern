@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const userSlice = createSlice({
   name: "user",
-  initialState: { user: {}, error: "", loading: false },
+  initialState: { user: {}, error: "", loading: false, transactions: [] },
   reducers: {
     login: (state, action) => {
       state.user = action.payload;
@@ -14,10 +14,17 @@ export const userSlice = createSlice({
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
+    setTransactions: (state, action) => {
+      state.transactions = action.payload;
+    },
+    clearTransactions: (state) => {
+      state.transactions = [];
+    },
   },
 });
 
-export const { login, logout, setLoading } = userSlice.actions;
+export const { login, logout, setLoading, setTransactions, clearTransactions } =
+  userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -220,5 +227,30 @@ export const actionClearCart = (token, total) => {
     } catch (e) {
       throw { msg: e.response.data.msg };
     }
+  };
+};
+
+export const actionGetTransactions = (token) => {
+  return async function (dispatch) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/transactions`;
+    try {
+      const { data } = await axios.get(URL, config);
+      dispatch(setTransactions(data));
+      return { msg: "empty cart" };
+    } catch (e) {
+      throw { msg: e.response.data.msg };
+    }
+  };
+};
+
+export const actionClearTransactions = () => {
+  return async function (dispatch) {
+    dispatch(clearTransactions());
   };
 };

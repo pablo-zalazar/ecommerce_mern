@@ -4,7 +4,6 @@
   box-shadow: var(--global-box-shadow);
   padding: 10px;
   max-width: 600px;
-  overflow-y: hidden;
 }
 
 .skeleton .default,

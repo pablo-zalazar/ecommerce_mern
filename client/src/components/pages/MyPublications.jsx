@@ -236,24 +236,29 @@ export default function MyPublications() {
 
       <div className="cards">
         <h2>Publications</h2>
-        <div className="cardsContainer">
-          {loading ? (
-            <LoadCard />
-          ) : (
-            <div>
-              {myPublications?.map((p) => (
-                <Publication
-                  key={p._id}
-                  product={p}
-                  owner={true}
-                  update={update}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        {myPublications.length <= 0 ? (
+          <h2>No publications</h2>
+        ) : (
+          <div className="cardsContainer">
+            {loading ? (
+              <div>
+                <LoadCard />
+              </div>
+            ) : (
+              <div>
+                {myPublications?.map((p) => (
+                  <Publication
+                    key={p._id}
+                    product={p}
+                    owner={true}
+                    update={update}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
-      <ToastContainer />
     </div>
   );
 }

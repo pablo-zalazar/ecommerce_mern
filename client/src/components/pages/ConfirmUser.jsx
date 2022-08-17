@@ -1,4 +1,5 @@
 import React from "react";
+import "../../styles/confirmUser.css";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
@@ -27,7 +28,12 @@ export default function ConfirmUser() {
 
   return (
     <>
-      <Link to="/">Return</Link>
+      <div className="confirmUser">
+        <div>
+          <h2>User confirmed</h2>
+          <Link to="/">Return</Link>
+        </div>
+      </div>
       <ToastContainer />
     </>
   );

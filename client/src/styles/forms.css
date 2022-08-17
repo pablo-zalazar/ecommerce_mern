@@ -2,7 +2,7 @@ form {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  overflow-y: hidden;
+
   padding: 10px;
 }
 
@@ -35,7 +35,7 @@ form .actions {
   justify-content: flex-start;
   align-items: flex-end;
   gap: 10px;
-  overflow-y: hidden;
+
   padding: 10px 0;
 }
 

@@ -33,6 +33,9 @@ export default function UserSettings({ showSettings, setShowSettings }) {
         <div>
           <Link to="/myPublications">Articles</Link>
         </div>
+        <div>
+          <Link to="/transactions">Transactions</Link>
+        </div>
         <div onClick={() => handleLogout()}>
           <Link to="/">Logout</Link>
         </div>

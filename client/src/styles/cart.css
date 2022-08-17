@@ -1,6 +1,5 @@
 .cart {
-  padding: 10px;
-  padding-bottom: 20px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -19,6 +18,51 @@
   gap: 10px;
 }
 
+.cart .rightSide .actions {
+  display: flex;
+  gap: 5px;
+}
+
+.cart .rightSide .actions button {
+  position: relative;
+  width: 100px;
+  padding: 10px;
+  text-align: center;
+  border: var(--global-border);
+  border-radius: var(--global-radius);
+  font-weight: 700;
+}
+
+.cart .rightSide .actions button:hover {
+  cursor: pointer;
+  border: var(--global-border-hover);
+}
+
+.cart .rightSide .actions .btnPrimary {
+  background-color: var(--global--color);
+  color: #fff;
+}
+
+.cart .rightSide .actions .btnPrimary:hover {
+  background-color: var(--global--color-hover);
+}
+
+.cart .rightSide .actions .btnPrimary:active {
+  background-color: var(--global--color-active);
+}
+
+.cart .rightSide .actions .btnSecondary {
+  background-color: #d3d3d3;
+}
+
+.cart .rightSide .actions .btnSecondary:hover {
+  background-color: #c3c3c3;
+}
+
+.cart .rightSide .actions .btnSecondary:active {
+  background-color: #bababa;
+}
+
 @media screen and (min-width: 800px) {
   .cart {
     flex-direction: row;
@@ -27,11 +71,12 @@
   .cart .leftSide {
     flex-basis: 80%;
     max-width: 600px;
-    max-height: 600px;
   }
 
   .cart .leftSide .cardsContainer {
-    padding-bottom: 20px;
+    padding: 20px;
+    overflow-y: scroll;
+    max-height: 600px;
   }
 
   .cart .rightSide {
@@ -42,51 +87,6 @@
     align-items: center;
     justify-content: center;
     gap: 10px;
-  }
-
-  .cart .rightSide .actions {
-    display: flex;
-    gap: 5px;
-    overflow: hidden;
-  }
-
-  .cart .rightSide .actions button {
-    position: relative;
-    width: 100px;
-    padding: 10px;
-    text-align: center;
-    border: var(--global-border);
-    border-radius: var(--global-radius);
-    font-weight: 700;
-  }
-
-  .cart .rightSide .actions button:hover {
-    cursor: pointer;
-    border: var(--global-border-hover);
-  }
-
-  .cart .rightSide .actions .btnPrimary {
-    background-color: var(--global--color);
-    color: #fff;
-  }
-
-  .cart .rightSide .actions .btnPrimary:hover {
-    background-color: var(--global--color-hover);
-  }
-
-  .cart .rightSide .actions .btnPrimary:active {
-    background-color: var(--global--color-active);
-  }
-
-  .cart .rightSide .actions .btnSecondary {
-    background-color: #d3d3d3;
-  }
-
-  .cart .rightSide .actions .btnSecondary:hover {
-    background-color: #c3c3c3;
-  }
-
-  .cart .rightSide .actions .btnSecondary:active {
-    background-color: #bababa;
+    height: 600px;
   }
 }

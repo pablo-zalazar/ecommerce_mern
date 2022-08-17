@@ -146,6 +146,6 @@
 
   .main .cards {
     flex-basis: 70%;
-    max-width: 800px;
+    max-width: 600px;
   }
 }

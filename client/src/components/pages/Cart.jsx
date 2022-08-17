@@ -51,7 +51,7 @@ export default function Cart() {
                 <Publication key={i} product={p} owner={false} cart={true} />
               ))
             ) : (
-              <p>No hay nada</p>
+              <h2>Empty</h2>
             )
           ) : (
             <p>Cargando</p>

@@ -33,11 +33,9 @@ export default function Header({
         <Link to="/">
           <img src="/img/logo.png" alt="logo" />
         </Link>
-        {user && (
-          <h2>
-            Hello {user.name} <p>${user.money}</p>
-          </h2>
-        )}
+        <h2>
+          Hello {user.user} <p>${user.money}</p>
+        </h2>
       </div>
       <div className="rightSide">
         <Searchbar />
@@ -63,7 +61,6 @@ export default function Header({
         <Link to="/">
           <img src="/img/logo.png" alt="logo" />
         </Link>
-        {user.name && <h2>Hello {user.name}</h2>}
       </div>
       <div className="rightSide">
         <Searchbar />

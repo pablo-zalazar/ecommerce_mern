@@ -10,6 +10,7 @@ import Layout from "./components/Layout";
 import MyPublications from "./components/pages/MyPublications";
 import Details from "./components/pages/Details";
 import Cart from "./components/pages/Cart";
+import Transactions from "./components/pages/Transactions";
 
 function App() {
   return (
@@ -28,6 +29,10 @@ function App() {
 
           <Route path="/cart" element={<VerifyUser />}>
             <Route index element={<Cart />} />
+          </Route>
+
+          <Route path="/transactions" element={<VerifyUser />}>
+            <Route index element={<Transactions />} />
           </Route>
         </Routes>
       </Layout>

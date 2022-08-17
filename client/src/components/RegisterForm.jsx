@@ -24,8 +24,9 @@ export default function RegisterModal({ showModal }) {
   const required = "Required Field";
 
   const createSchema = Yup.object().shape({
-    name: Yup.string().required(required),
-    lastname: Yup.string().required(required),
+    name: Yup.string().min(4, "At least 6 characters").required(required),
+    lastname: Yup.string().min(4, "At least 6 characters").required(required),
+    user: Yup.string().min(5, "At least 6 characters").required(required),
     email: Yup.string().email("Invalid format").required(required),
     password: Yup.string().min(6, "At least 6 characters").required(required),
     birthday: Yup.string().required(required),
@@ -38,6 +39,7 @@ export default function RegisterModal({ showModal }) {
         initialValues={{
           name: "",
           lastname: "",
+          user: "",
           password: "",
           email: "",
           birthday: "",
@@ -65,6 +67,13 @@ export default function RegisterModal({ showModal }) {
             />
             <p className="error">
               <ErrorMessage name="lastname" />
+            </p>
+          </div>
+          <div>
+            <label htmlFor="lastname">User</label>
+            <Field name="user" id="user" type="text" placeholder="user" />
+            <p className="error">
+              <ErrorMessage name="user" />
             </p>
           </div>
           <div>

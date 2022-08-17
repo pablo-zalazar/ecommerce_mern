@@ -44,7 +44,6 @@
 .details .actions {
   display: flex;
   gap: 5px;
-  overflow: hidden;
 }
 
 .details .actions button {

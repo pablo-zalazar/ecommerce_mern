@@ -8,13 +8,16 @@ import {
   actionGetAllPublications,
   actionFilterPublications,
   actionClearSearch,
+  actionSetCurrentPage,
 } from "../../store/slices/publication";
 import { actionGetcategories } from "../../store/slices/category";
 import Publication from "../Publication";
+import LoadCard from "../LoadCard";
+import Pagination from "../Pagination";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { filterPublications, search } = useSelector(
+  const { filterPublications, search, loading, currentPage } = useSelector(
     (state) => state.publications
   );
   const { categories } = useSelector((state) => state.categories);
@@ -31,10 +34,20 @@ export default function Home() {
     search: "",
   });
 
-  useEffect(() => {
-    dispatch(actionGetAllPublications());
-    dispatch(actionGetcategories());
+  // pagination
+  const publicationsPerPage = 10;
 
+  const lastGameIndex = currentPage * publicationsPerPage;
+  const firstGameIndex = lastGameIndex - publicationsPerPage;
+  const currentPublications = publications.slice(firstGameIndex, lastGameIndex);
+
+  const pagination = (pageNumber) => {
+    dispatch(actionSetCurrentPage(pageNumber));
+  };
+
+  useEffect(() => {
+    if (!search) dispatch(actionGetAllPublications());
+    dispatch(actionGetcategories());
     return () => dispatch(actionClearSearch());
   }, []);
 
@@ -56,14 +69,6 @@ export default function Home() {
     if (!firstMount) dispatch(actionFilterPublications({ ...filter, search }));
     else setFirstMount(false);
   }, [filter]);
-
-  // useEffect(() => {
-  //   async function getPublications() {
-  //     await dispatch(actionGetAllPublications());
-  //     await dispatch(actionGetcategories());
-  //   }
-  //   getPublications();
-  // }, []);
 
   const handleFilter = (arr) => {
     if (arr[0] === "category")
@@ -132,7 +137,8 @@ export default function Home() {
   return (
     <div className="main">
       <section className="filters">
-        <h3>{publications.length} Results</h3>
+        {!loading && <h3>{publications.length} Results</h3>}
+
         <h2>Filters</h2>
         {search && <h3>{search}</h3>}
         <div className="filtersName">
@@ -243,12 +249,21 @@ export default function Home() {
         <p>{error}</p>
       </section>
       <section className="cards">
-        {publications.length > 0 ? (
-          publications?.map((publication) => (
-            <Publication key={publication._id} product={publication} />
-          ))
+        {loading ? (
+          <LoadCard />
+        ) : currentPublications.length > 0 ? (
+          <>
+            <Pagination
+              perPage={publicationsPerPage}
+              amount={publications.length}
+              pagination={pagination}
+            />
+            {currentPublications?.map((publication) => (
+              <Publication key={publication._id} product={publication} />
+            ))}
+          </>
         ) : (
-          <p>No hay productos</p>
+          <h2>no publications</h2>
         )}
       </section>
     </div>

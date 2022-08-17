@@ -56,6 +56,7 @@ export const authenticate = async (req, res) => {
     _id: user._id,
     name: user.name,
     lastname: user.lastname,
+    user: user.user,
     email: user.email,
     publications: user.publications,
     admin: user.admin,
@@ -147,9 +148,7 @@ export const profile = (req, res) => {
 
 export const addToCart = async (req, res) => {
   const { id } = req.params;
-  // const userId = req.user._id;
   try {
-    // const user = await User.findById(userId);
     req.user.cart.push(id);
     await req.user.save();
     return res.json(req.user);
@@ -160,8 +159,6 @@ export const addToCart = async (req, res) => {
 
 export const removeFromCart = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
-  // console.log(req.user);
   try {
     const publication = await Publication.findById(id);
     req.user.cart = req.user.cart.filter((p) => p.id !== publication.id);
@@ -199,6 +196,16 @@ export const clearCart = async (req, res) => {
     req.user.cart = [];
     await req.user.save();
     return res.json(req.user);
+  } catch (e) {
+    return res.status(400).json({ msg: e.message });
+  }
+};
+
+export const getTransactions = async (req, res) => {
+  const { id } = req.user;
+  try {
+    const user = await User.findById(id).populate("transactions");
+    return res.json(user.transactions);
   } catch (e) {
     return res.status(400).json({ msg: e.message });
   }

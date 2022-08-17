@@ -1,0 +1,20 @@
+.confirmUser {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 20vh;
+}
+
+.confirmUser div {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.confirmUser div a {
+  text-decoration: none;
+  color: #000;
+}

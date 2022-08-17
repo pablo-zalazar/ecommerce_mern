@@ -13,6 +13,11 @@ const userSchema = mongoose.Schema(
       required: true,
       trim: true,
     },
+    user: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     password: {
       type: String,
       required: true,
@@ -44,6 +49,12 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    transactions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Transaction",
+      },
+    ],
     publications: [
       {
         type: mongoose.Schema.Types.ObjectId,

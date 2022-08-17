@@ -1,5 +1,6 @@
 import Publication from "../models/Publication.js";
 import User from "../models/User.js";
+import Transaction from "../models/Transaction.js";
 import makeGeneratorIDRandom from "../middleware/idGenerator.js";
 
 export const getAllPublications = async (req, res) => {
@@ -103,7 +104,6 @@ export const deletePublication = async (req, res) => {
 
 export const updatePublication = async (req, res) => {
   const { id } = req.params;
-  console.log(req.body);
   try {
     await Publication.findByIdAndUpdate(id, req.body);
     const user = await User.findById(req.user._id).populate("publications");
@@ -122,7 +122,6 @@ export const getDetails = async (req, res) => {
   const { id } = req.params;
   try {
     const publication = await Publication.findById(id).populate("owner");
-    console.log(publication);
     return res.json(publication);
   } catch (e) {
     return req.status(400).json({ msg: e.message });
@@ -133,15 +132,24 @@ export const buyProduct = async (req, res) => {
   const { id } = req.params;
   try {
     const user = await User.findById(req.user._id);
-    console.log(user);
     const publication = await Publication.findById(id);
+    const seller = await User.findById(publication.owner);
+    const newTransaction = new Transaction({
+      buyer: req.user._id,
+      seller: publication.owner,
+      product: publication._id,
+    });
     console.log(publication);
     if (user.money > publication.price) {
       user.money -= publication.price;
+      user.transactions.push(newTransaction._id);
+      seller.transactions.push(newTransaction._id);
       publication.stock -= 1;
       publication.quantitySold += 1;
       await user.save();
       await publication.save();
+      await seller.save();
+      await newTransaction.save();
       return res.json(publication);
     } else {
       return res.status(400).json({ msg: "insufficient money" });

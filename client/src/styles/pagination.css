@@ -1,0 +1,35 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin: 10px;
+}
+
+.pagination p,
+.pagination button {
+  padding: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background-color: var(--global--color);
+  border: var(--global-border);
+  border-radius: var(--global-radius);
+  color: #fff;
+  min-height: 30px;
+}
+
+.pagination p:hover,
+.pagination button:hover {
+  background-color: var(--global--color-hover);
+  border: var(--global-border-hover);
+}
+
+.pagination p:active,
+.pagination button:active {
+  background-color: var(--global--color-active);
+}
+
+.pagination .current {
+  font-weight: 700;
+  font-size: 20px;
+}

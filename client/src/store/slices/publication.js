@@ -12,6 +12,7 @@ export const publicationSlice = createSlice({
     details: {},
     search: "",
     loading: false,
+    currentPage: 1,
   },
   reducers: {
     allPublications: (state, action) => {
@@ -42,6 +43,9 @@ export const publicationSlice = createSlice({
     clearSearch: (state) => {
       state.search = "";
     },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
   },
 });
 
@@ -55,12 +59,20 @@ export const {
   setLoading,
   setSearch,
   clearSearch,
+  setCurrentPage,
 } = publicationSlice.actions;
 
 export default publicationSlice.reducer;
 
+export const actionSetLoading = (value) => {
+  return async function (dispatch) {
+    dispatch(setLoading(value));
+  };
+};
+
 export const actionGetAllPublications = () => {
   return async function (dispatch) {
+    dispatch(actionSetLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -70,6 +82,7 @@ export const actionGetAllPublications = () => {
     try {
       const { data } = await axios.get(URL, config);
       dispatch(allPublications(data));
+      dispatch(actionSetLoading(false));
     } catch (e) {
       throw { msg: e.response.data.msg };
     }
@@ -98,8 +111,8 @@ export const actionClearSearch = () => {
 };
 
 export const actionFilterPublications = (filters) => {
-  // console.log(filters);
   return async function (dispatch) {
+    dispatch(actionSetLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -129,6 +142,7 @@ export const actionFilterPublications = (filters) => {
         );
       }
       dispatch(filterPublications(arrayFilter));
+      dispatch(actionSetLoading(false));
     } catch (e) {
       console.log(e);
       // throw { msg: e.response.data.msg };
@@ -138,7 +152,7 @@ export const actionFilterPublications = (filters) => {
 
 export const actionGetMyPublications = (token, id) => {
   return async function (dispatch) {
-    dispatch(setLoading(true));
+    dispatch(actionSetLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -149,7 +163,7 @@ export const actionGetMyPublications = (token, id) => {
     try {
       const { data } = await axios.get(URL, config);
       dispatch(myPublications(data));
-      dispatch(setLoading(false));
+      dispatch(actionSetLoading(false));
     } catch (e) {
       throw { msg: e.response.data.msg };
     }
@@ -158,7 +172,7 @@ export const actionGetMyPublications = (token, id) => {
 
 export const actionCreatePublication = (values, token, id) => {
   return async function (dispatch) {
-    dispatch(setLoading(true));
+    dispatch(actionSetLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -177,7 +191,7 @@ export const actionCreatePublication = (values, token, id) => {
         config
       );
       dispatch(actionGetMyPublications(token, id));
-      dispatch(setLoading(false));
+      dispatch(actionSetLoading(false));
       return { msg: "Publication created" };
     } catch (e) {
       throw { msg: e.response.data.msg };
@@ -187,7 +201,7 @@ export const actionCreatePublication = (values, token, id) => {
 
 export const actionDeletePublication = (token, user_id, product_id) => {
   return async function (dispatch) {
-    dispatch(setLoading(true));
+    dispatch(actionSetLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -198,7 +212,7 @@ export const actionDeletePublication = (token, user_id, product_id) => {
     try {
       await axios.delete(URL, config);
       dispatch(actionGetMyPublications(token, user_id));
-      dispatch(setLoading(false));
+      dispatch(actionSetLoading(false));
       return { msg: "Publication deleted" };
     } catch (e) {
       throw { msg: e.response.data.msg };
@@ -208,7 +222,7 @@ export const actionDeletePublication = (token, user_id, product_id) => {
 
 export const actionUpdatePublication = (values, token, id) => {
   return async function (dispatch) {
-    dispatch(setLoading(true));
+    dispatch(actionSetLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -219,7 +233,7 @@ export const actionUpdatePublication = (values, token, id) => {
     try {
       await axios.put(URL, values, config);
       dispatch(actionGetMyPublications(token, id));
-      dispatch(setLoading(false));
+      dispatch(actionSetLoading(false));
       return { msg: "Publication updated" };
     } catch (e) {
       throw { msg: e.response.data.msg };
@@ -229,7 +243,7 @@ export const actionUpdatePublication = (values, token, id) => {
 
 export const actionGetDetails = (id) => {
   return async function (dispatch) {
-    dispatch(setLoading(true));
+    dispatch(actionSetLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -239,7 +253,7 @@ export const actionGetDetails = (id) => {
     try {
       const { data } = await axios.get(URL, config);
       dispatch(setDetails(data));
-      dispatch(setLoading(false));
+      dispatch(actionSetLoading(false));
     } catch (e) {
       throw { msg: e.response.data.msg };
     }
@@ -275,5 +289,11 @@ export const actionBuy = (token, id) => {
     } catch (e) {
       throw { msg: e.response.data.msg };
     }
+  };
+};
+
+export const actionSetCurrentPage = (value) => {
+  return async function (dispatch) {
+    dispatch(setCurrentPage(value));
   };
 };
