@@ -10,7 +10,7 @@ import Layout from "./components/Layout";
 import MyPublications from "./components/pages/MyPublications";
 import Details from "./components/pages/Details";
 import Cart from "./components/pages/Cart";
-import Transactions from "./components/pages/Transactions";
+import Profile from "./components/pages/Profile";
 
 function App() {
   return (
@@ -27,12 +27,16 @@ function App() {
             <Route index element={<MyPublications />} />
           </Route>
 
+          <Route path="/myPublications" element={<VerifyUser />}>
+            <Route index element={<MyPublications />} />
+          </Route>
+
           <Route path="/cart" element={<VerifyUser />}>
             <Route index element={<Cart />} />
           </Route>
 
-          <Route path="/transactions" element={<VerifyUser />}>
-            <Route index element={<Transactions />} />
+          <Route path="/profile" element={<VerifyUser />}>
+            <Route index element={<Profile />} />
           </Route>
         </Routes>
       </Layout>

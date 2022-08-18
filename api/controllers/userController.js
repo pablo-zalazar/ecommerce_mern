@@ -204,8 +204,27 @@ export const clearCart = async (req, res) => {
 export const getTransactions = async (req, res) => {
   const { id } = req.user;
   try {
-    const user = await User.findById(id).populate("transactions");
-    return res.json(user.transactions);
+    const user = await User.findById(id, "transactions").populate(
+      "user transactions"
+    );
+    const transactionsArray = await Promise.all(
+      user.transactions.map(async (t) => {
+        const buyer = await User.findById(t.buyer, "user");
+        const seller = await User.findById(t.seller, "user");
+        const publication = await Publication.findById(
+          t.product,
+          "title price description state category subCategory"
+        );
+        return {
+          id: t._id,
+          buyer: buyer.user,
+          seller: seller.user,
+          publication,
+          date: t.createdAt,
+        };
+      })
+    );
+    return res.json(transactionsArray);
   } catch (e) {
     return res.status(400).json({ msg: e.message });
   }

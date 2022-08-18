@@ -7,6 +7,7 @@ import { actionAuthenticateUser } from "../store/slices/user";
 export default function VerifyUser() {
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
+
   useEffect(() => {
     if (!token) {
       return;

@@ -1,0 +1,81 @@
+.profile {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile .options {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile .options .actions {
+  padding-top: 20px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.profile .options .actions button {
+  position: relative;
+  width: 100px;
+  height: 55px;
+  padding: 10px;
+  text-align: center;
+  background-color: var(--global--color);
+  border: var(--global-border);
+  border-radius: var(--global-radius);
+  font-weight: 700;
+  color: #fff;
+}
+
+.profile .options .actions button:hover {
+  background-color: var(--global--color-hover);
+  border: var(--global-border-hover);
+}
+
+.profile .options .actions button:active {
+  background-color: var(--global--color-active);
+}
+
+.profile .options > h2,
+.profile .transactions > h2,
+.profile .transactions .cardContainer > h2 {
+  font-size: 30px;
+  text-align: center;
+}
+
+.profile .transactions .cardContainer {
+  padding: 10px;
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media screen and (min-width: 800px) {
+  .profile {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .profile .options .actions {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .profile .options {
+    flex-basis: 20%;
+  }
+
+  .profile .transactions {
+    flex-grow: 1;
+    max-width: 600px;
+  }
+
+  .profile .transactions .cardContainer {
+    max-height: 600px;
+    overflow-y: auto;
+  }
+}

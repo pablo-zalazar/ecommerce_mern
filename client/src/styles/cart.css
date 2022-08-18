@@ -75,7 +75,7 @@
 
   .cart .leftSide .cardsContainer {
     padding: 20px;
-    overflow-y: scroll;
+    overflow-y: auto;
     max-height: 600px;
   }
 

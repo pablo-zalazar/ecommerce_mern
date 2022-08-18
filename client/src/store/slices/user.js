@@ -36,7 +36,7 @@ export const actionUserLogin = (user) => {
       },
     };
 
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/login`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/login`;
     try {
       const { data } = await axios.post(URL, user, config);
       dispatch(login(data));
@@ -61,7 +61,7 @@ export const actionUserRegister = (user) => {
       },
     };
 
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users`;
     try {
       const { data } = await axios.post(URL, user, config);
       return data;
@@ -73,7 +73,7 @@ export const actionUserRegister = (user) => {
 
 export const actionConfirmUser = (token) => {
   return async function () {
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/confirm/${token}`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/confirm/${token}`;
     try {
       const { data } = await axios.get(URL);
       return data;
@@ -90,7 +90,7 @@ export const actionForgetPassword = (values) => {
         "Content-type": "application/json",
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/forget-password`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/forget-password`;
     try {
       const { data } = await axios.post(URL, values, config);
       return data;
@@ -103,7 +103,7 @@ export const actionForgetPassword = (values) => {
 export const actionCheckToken = (token) => {
   return async function (dispatch) {
     dispatch(setLoading(true));
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/forget-password/${token}`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/forget-password/${token}`;
     try {
       const { data } = await axios.get(URL);
       dispatch(setLoading(false));
@@ -122,7 +122,7 @@ export const actionNewPassword = (values) => {
         "Content-type": "application/json",
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/forget-password/${token}`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/forget-password/${token}`;
     try {
       const { data } = await axios.post(URL, password, config);
       return data;
@@ -140,7 +140,7 @@ export const actionAuthenticateUser = (token) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/profile`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/profile`;
     try {
       const { data } = await axios.get(URL, config);
       dispatch(login(data));
@@ -158,7 +158,7 @@ export const actionAddToCart = (token, id) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/addToCart/${id}`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/addToCart/${id}`;
     try {
       const { data } = await axios.get(URL, config);
 
@@ -178,10 +178,10 @@ export const actionRemoveFromCart = (token, id) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/removeFromCart/${id}`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/removeFromCart/${id}`;
     try {
       const { data } = await axios.get(URL, config);
-      console.log(data);
+
       dispatch(actionAuthenticateUser(token));
       return { msg: "product romved from cart" };
     } catch (e) {
@@ -198,7 +198,7 @@ export const actionBuyCart = (token, total) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/buyCart`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/buyCart`;
     try {
       const { data } = await axios.post(URL, { total }, config);
       console.log(data);
@@ -218,10 +218,10 @@ export const actionClearCart = (token, total) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/clearCart`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/clearCart`;
     try {
       const { data } = await axios.post(URL, { total }, config);
-      console.log(data);
+
       dispatch(actionAuthenticateUser(token));
       return { msg: "empty cart" };
     } catch (e) {
@@ -232,17 +232,18 @@ export const actionClearCart = (token, total) => {
 
 export const actionGetTransactions = (token) => {
   return async function (dispatch) {
+    dispatch(setLoading(true));
     const config = {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/users/transactions`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/transactions`;
     try {
       const { data } = await axios.get(URL, config);
       dispatch(setTransactions(data));
-      return { msg: "empty cart" };
+      dispatch(setLoading(false));
     } catch (e) {
       throw { msg: e.response.data.msg };
     }

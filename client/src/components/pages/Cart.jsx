@@ -10,6 +10,7 @@ export default function Cart() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.users);
   const [total, setTotal] = useState(0);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     if (Object.keys(user).length > 0) {
@@ -21,7 +22,6 @@ export default function Cart() {
   }, [user]);
 
   const handleBuyCart = async () => {
-    const token = localStorage.getItem("token");
     try {
       const { msg } = await dispatch(actionBuyCart(token, total));
       Alert("success", msg);
@@ -31,7 +31,6 @@ export default function Cart() {
   };
 
   const clearCart = async () => {
-    const token = localStorage.getItem("token");
     try {
       const { msg } = await dispatch(actionClearCart(token));
       Alert("success", msg);

@@ -9,30 +9,31 @@ import {
   actionFilterPublications,
   actionClearSearch,
   actionSetCurrentPage,
+  actionSetFilter,
+  actionClearFilter,
 } from "../../store/slices/publication";
 import { actionGetcategories } from "../../store/slices/category";
 import Publication from "../Publication";
 import LoadCard from "../LoadCard";
 import Pagination from "../Pagination";
 
+import io from "socket.io-client";
+let socket;
+socket = io(process.env.REACT_APP_BACKEND_URL);
+
 export default function Home() {
   const dispatch = useDispatch();
-  const { filterPublications, search, loading, currentPage } = useSelector(
-    (state) => state.publications
-  );
+  const { filterPublications, search, loading, currentPage, filterRedux } =
+    useSelector((state) => state.publications);
   const { categories } = useSelector((state) => state.categories);
   const { user } = useSelector((state) => state.users);
   const [priceFilter, setPriceFIlter] = useState({ min: "", max: "" });
   const [publications, setPublications] = useState([]);
   const [error, setError] = useState("");
   const [firstMount, setFirstMount] = useState(true);
-  const [filter, setFilter] = useState({
-    category: "",
-    subCategory: "",
-    state: "",
-    price: { min: "", max: "" },
-    search: "",
-  });
+  const [filter, setFilter] = useState(filterRedux);
+
+  // console.log(filterRedux);
 
   // pagination
   const publicationsPerPage = 10;
@@ -41,6 +42,9 @@ export default function Home() {
   const firstGameIndex = lastGameIndex - publicationsPerPage;
   const currentPublications = publications.slice(firstGameIndex, lastGameIndex);
 
+  // socket;
+  const params = window.location.href;
+
   const pagination = (pageNumber) => {
     dispatch(actionSetCurrentPage(pageNumber));
   };
@@ -48,57 +52,97 @@ export default function Home() {
   useEffect(() => {
     if (!search) dispatch(actionGetAllPublications());
     dispatch(actionGetcategories());
-    return () => dispatch(actionClearSearch());
+    socket.emit("Update", params);
+    return () => {
+      dispatch(actionClearSearch());
+      // dispatch(actionClearFilter());
+    };
+  }, []);
+
+  useEffect(() => {
+    socket.on("homeUpdate", async () => {
+      // await dispatch(actionGetAllPublications());
+      // await dispatch(actionFilterPublications({ ...filter, search }));
+      // setPublications(filterPublications.filter((p) => p.owner !== user._id));
+      return () => {
+        socket.off();
+      };
+    });
   }, []);
 
   useEffect(() => {
     setPublications(filterPublications.filter((p) => p.owner !== user._id));
   }, [filterPublications, user]);
 
-  useEffect(() => {
-    setFilter({
-      category: "",
-      subCategory: "",
-      state: "",
-      price: { min: "", max: "" },
-      search: "",
-    });
-  }, [search]);
-
-  useEffect(() => {
-    if (!firstMount) dispatch(actionFilterPublications({ ...filter, search }));
-    else setFirstMount(false);
-  }, [filter]);
+  console.log(priceFilter);
 
   const handleFilter = (arr) => {
     if (arr[0] === "category")
-      setFilter({ ...filter, category: arr[1], subCategory: "" });
+      dispatch(
+        actionSetFilter({ ...filterRedux, category: arr[1], subCategory: "" })
+      );
     if (arr[0] === "subCategory")
-      setFilter({ ...filter, category: arr[1], subCategory: arr[2] });
-    if (arr[0] === "state") setFilter({ ...filter, state: arr[1] });
+      dispatch(
+        actionSetFilter({
+          ...filterRedux,
+          category: arr[1],
+          subCategory: arr[2],
+        })
+      );
+    if (arr[0] === "state")
+      dispatch(actionSetFilter({ ...filterRedux, state: arr[1] }));
     if (arr[0] === "price") {
       if (!isNaN(priceFilter.min) && !isNaN(priceFilter.max)) {
-        if (priceFilter.max === "" || priceFilter.min <= priceFilter.max) {
-          setFilter({
-            ...filter,
-            price: {
-              min: priceFilter.min,
-              max: priceFilter.max,
-            },
-          });
+        if (priceFilter.min === "" && priceFilter.max === "") {
+          console.log("1");
+          dispatch(
+            actionSetFilter({
+              ...filterRedux,
+              price: {
+                min: priceFilter.min,
+                max: priceFilter.max,
+              },
+            })
+          );
           setPriceFIlter({ min: "", max: "" });
           setError("");
-        } else if (
-          priceFilter.max !== "" ||
-          priceFilter.min <= priceFilter.max
-        ) {
-          setFilter({
-            ...filter,
-            price: {
-              min: priceFilter.min,
-              max: priceFilter.max,
-            },
-          });
+        } else if (priceFilter.min !== "" && priceFilter.max === "") {
+          console.log("2");
+          dispatch(
+            actionSetFilter({
+              ...filterRedux,
+              price: {
+                min: priceFilter.min,
+                max: priceFilter.max,
+              },
+            })
+          );
+          setPriceFIlter({ min: "", max: "" });
+          setError("");
+        } else if (priceFilter.min === "" && priceFilter.max !== "") {
+          console.log("3");
+          dispatch(
+            actionSetFilter({
+              ...filterRedux,
+              price: {
+                min: priceFilter.min,
+                max: priceFilter.max,
+              },
+            })
+          );
+          setPriceFIlter({ min: "", max: "" });
+          setError("");
+        } else if (Number(priceFilter.min) < Number(priceFilter.max)) {
+          console.log("4");
+          dispatch(
+            actionSetFilter({
+              ...filterRedux,
+              price: {
+                min: priceFilter.min,
+                max: priceFilter.max,
+              },
+            })
+          );
           setPriceFIlter({ min: "", max: "" });
           setError("");
         } else {
@@ -112,26 +156,38 @@ export default function Home() {
 
   const handleRemoveFilter = (type) => {
     if (type === "category")
-      setFilter({ ...filter, category: "", subCategory: "" });
-    if (type === "subCategory") setFilter({ ...filter, subCategory: "" });
-    if (type === "state") setFilter({ ...filter, state: "" });
+      dispatch(
+        actionSetFilter({ ...filterRedux, category: "", subCategory: "" })
+      );
+    if (type === "subCategory")
+      dispatch(actionSetFilter({ ...filterRedux, subCategory: "" }));
+    if (type === "state")
+      dispatch(actionSetFilter({ ...filterRedux, state: "" }));
     if (type === "min")
-      setFilter({ ...filter, price: { min: "", max: filter.price.max } });
+      dispatch(
+        actionSetFilter({
+          ...filterRedux,
+          price: { min: "", max: filterRedux.price.max },
+        })
+      );
     if (type === "max")
-      setFilter({ ...filter, price: { min: filter.price.min, max: "" } });
+      dispatch(
+        actionSetFilter({
+          ...filterRedux,
+          price: { min: filterRedux.price.min, max: "" },
+        })
+      );
     if (type === "allPrice")
-      setFilter({ ...filter, price: { min: "", max: "" } });
+      dispatch(
+        actionSetFilter({ ...filterRedux, price: { min: "", max: "" } })
+      );
   };
 
   const handleReset = () => {
     dispatch(actionClearSearch());
-    setFilter({
-      category: "",
-      subCategory: "",
-      state: "",
-      price: { min: "", max: "" },
-      search: "",
-    });
+    setPriceFIlter({ min: "", max: "" });
+    setError("");
+    dispatch(actionClearFilter());
   };
 
   return (
@@ -142,37 +198,37 @@ export default function Home() {
         <h2>Filters</h2>
         {search && <h3>{search}</h3>}
         <div className="filtersName">
-          {filter.category && (
+          {filterRedux.category && (
             <p onClick={() => handleRemoveFilter("category")}>
-              {filter.category} <span>x</span>
+              {filterRedux.category} <span>x</span>
             </p>
           )}
-          {filter.subCategory && (
+          {filterRedux.subCategory && (
             <p onClick={() => handleRemoveFilter("subCategory")}>
-              {filter.subCategory} <span>x</span>
+              {filterRedux.subCategory} <span>x</span>
             </p>
           )}
-          {filter.state && (
+          {filterRedux.state && (
             <p onClick={() => handleRemoveFilter("state")}>
-              {filter.state} <span>x</span>
+              {filterRedux.state} <span>x</span>
             </p>
           )}
-          {filter.price.min && filter.price.max ? (
+          {filterRedux.price.min && filterRedux.price.max ? (
             <p
               onClick={() => {
                 handleRemoveFilter("allPrice");
               }}
             >
-              ${filter.price.min} - ${filter.price.max} <span>x</span>
+              ${filterRedux.price.min} - ${filterRedux.price.max} <span>x</span>
             </p>
-          ) : filter.price.min ? (
+          ) : filterRedux.price.min ? (
             <p onClick={() => handleRemoveFilter("min")}>
-              from ${filter.price.min} <span>x</span>
+              from ${filterRedux.price.min} <span>x</span>
             </p>
           ) : (
-            filter.price.max && (
+            filterRedux.price.max && (
               <p onClick={() => handleRemoveFilter("max")}>
-                up ${filter.price.max} <span>x</span>
+                up ${filterRedux.price.max} <span>x</span>
               </p>
             )
           )}
@@ -187,7 +243,7 @@ export default function Home() {
               <h4
                 key={cat._id}
                 onClick={() => handleFilter(["category", cat.name])}
-                className={filter.category === cat.name ? "active" : ""}
+                className={filterRedux.category === cat.name ? "active" : ""}
               >
                 {cat.name}
               </h4>
@@ -200,8 +256,8 @@ export default function Home() {
                         handleFilter(["subCategory", cat.name, subCat])
                       }
                       className={
-                        filter.subCategory === subCat
-                          ? filter.category === cat.name
+                        filterRedux.subCategory === subCat
+                          ? filterRedux.category === cat.name
                             ? "active"
                             : ""
                           : ""

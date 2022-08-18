@@ -25,10 +25,12 @@ export default function MyPublications() {
   const [create, setCreate] = useState(true);
   const [publicationUpdate, setPublicationUpdate] = useState({});
   const { user } = useSelector((state) => state.users);
-  const { myPublications } = useSelector((state) => state.publications);
+  const { myPublications, loading } = useSelector(
+    (state) => state.publications
+  );
   const { categories } = useSelector((state) => state.categories);
-  const { loading } = useSelector((state) => state.publications);
   const [category, setCategory] = useState("");
+  const token = localStorage.getItem("token");
 
   let initialValues =
     Object.keys(publicationUpdate).length < 1
@@ -57,7 +59,6 @@ export default function MyPublications() {
 
   useEffect(() => {
     const func = async () => {
-      const token = localStorage.getItem("token");
       Object.keys(user).length > 0 &&
         (await dispatch(actionGetMyPublications(token, user._id)));
     };
@@ -88,7 +89,6 @@ export default function MyPublications() {
   };
 
   const onSubmit = async (values, resetForm) => {
-    const token = localStorage.getItem("token");
     if (create) {
       try {
         const { msg } = await dispatch(
@@ -236,28 +236,24 @@ export default function MyPublications() {
 
       <div className="cards">
         <h2>Publications</h2>
-        {myPublications.length <= 0 ? (
-          <h2>No publications</h2>
-        ) : (
-          <div className="cardsContainer">
-            {loading ? (
-              <div>
-                <LoadCard />
-              </div>
-            ) : (
-              <div>
-                {myPublications?.map((p) => (
-                  <Publication
-                    key={p._id}
-                    product={p}
-                    owner={true}
-                    update={update}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+        <div className="cardsContainer">
+          {loading ? (
+            <LoadCard />
+          ) : myPublications.length <= 0 ? (
+            <h2>Empty</h2>
+          ) : (
+            <div>
+              {myPublications?.map((p) => (
+                <Publication
+                  key={p._id}
+                  product={p}
+                  owner={true}
+                  update={update}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

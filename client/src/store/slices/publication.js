@@ -3,6 +3,10 @@ import axios from "axios";
 
 import { actionAuthenticateUser } from "./user";
 
+import io from "socket.io-client";
+let socket;
+socket = io(process.env.REACT_APP_BACKEND_URL);
+
 export const publicationSlice = createSlice({
   name: "publication",
   initialState: {
@@ -13,6 +17,13 @@ export const publicationSlice = createSlice({
     search: "",
     loading: false,
     currentPage: 1,
+    filterRedux: {
+      category: "",
+      subCategory: "",
+      state: "",
+      price: { min: "", max: "" },
+      search: "",
+    },
   },
   reducers: {
     allPublications: (state, action) => {
@@ -46,6 +57,18 @@ export const publicationSlice = createSlice({
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
     },
+    setFilter: (state, action) => {
+      state.filterRedux = action.payload;
+    },
+    clearFilter: (state, action) => {
+      state.filterRedux = {
+        category: "",
+        subCategory: "",
+        state: "",
+        price: { min: "", max: "" },
+        search: "",
+      };
+    },
   },
 });
 
@@ -60,6 +83,8 @@ export const {
   setSearch,
   clearSearch,
   setCurrentPage,
+  setFilter,
+  clearFilter,
 } = publicationSlice.actions;
 
 export default publicationSlice.reducer;
@@ -78,12 +103,13 @@ export const actionGetAllPublications = () => {
         "Content-Type": "application/json",
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications`;
     try {
       const { data } = await axios.get(URL, config);
       dispatch(allPublications(data));
       dispatch(actionSetLoading(false));
     } catch (e) {
+      console.log(e);
       throw { msg: e.response.data.msg };
     }
   };
@@ -93,7 +119,7 @@ export const actionSetSearch = (data) => {
   return async function (dispatch) {
     dispatch(setSearch(data.toLowerCase()));
     dispatch(
-      actionFilterPublications({
+      actionSetFilter({
         category: "",
         subCategory: "",
         state: "",
@@ -110,45 +136,47 @@ export const actionClearSearch = () => {
   };
 };
 
-export const actionFilterPublications = (filters) => {
-  return async function (dispatch) {
-    dispatch(actionSetLoading(true));
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications`;
-    try {
-      const { data } = await axios.get(URL, config);
-      let arrayFilter = data;
-      if (filters.category !== "")
-        arrayFilter = arrayFilter.filter(
-          (p) => p.category === filters.category
-        );
-      if (filters.subCategory !== "")
-        arrayFilter = arrayFilter.filter(
-          (p) => p.subCategory === filters.subCategory
-        );
-      if (filters.state !== "")
-        arrayFilter = arrayFilter.filter((p) => p.state === filters.state);
-      if (filters.price.min !== "")
-        arrayFilter = arrayFilter.filter((p) => p.price >= filters.price.min);
-      if (filters.price.max !== "")
-        arrayFilter = arrayFilter.filter((p) => p.price <= filters.price.max);
-      if (filters.search !== "") {
-        arrayFilter = arrayFilter.filter((p) =>
-          p.title.toLowerCase().split(" ").includes(filters.search)
-        );
-      }
-      dispatch(filterPublications(arrayFilter));
-      dispatch(actionSetLoading(false));
-    } catch (e) {
-      console.log(e);
-      // throw { msg: e.response.data.msg };
-    }
-  };
-};
+// export const actionFilterPublications = (filters) => {
+//   console.log("a");
+//   return async function (dispatch) {
+//     dispatch(actionSetLoading(true));
+//     const config = {
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     };
+//     const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications`;
+//     try {
+//       const { data } = await axios.get(URL, config);
+//       let arrayFilter = data;
+//       if (filters.category !== "")
+//         arrayFilter = arrayFilter.filter(
+//           (p) => p.category === filters.category
+//         );
+//       if (filters.subCategory !== "")
+//         arrayFilter = arrayFilter.filter(
+//           (p) => p.subCategory === filters.subCategory
+//         );
+//       if (filters.state !== "")
+//         arrayFilter = arrayFilter.filter((p) => p.state === filters.state);
+//       if (filters.price.min !== "")
+//         arrayFilter = arrayFilter.filter((p) => p.price >= filters.price.min);
+//       if (filters.price.max !== "")
+//         arrayFilter = arrayFilter.filter((p) => p.price <= filters.price.max);
+//       if (filters.search !== "") {
+//         arrayFilter = arrayFilter.filter((p) =>
+//           p.title.toLowerCase().split(" ").includes(filters.search)
+//         );
+//       }
+//       dispatch(filterPublications(arrayFilter));
+//       dispatch(actionSetFilter(filters));
+//       dispatch(actionSetLoading(false));
+//     } catch (e) {
+//       console.log(e);
+//       // throw { msg: e.response.data.msg };
+//     }
+//   };
+// };
 
 export const actionGetMyPublications = (token, id) => {
   return async function (dispatch) {
@@ -159,7 +187,7 @@ export const actionGetMyPublications = (token, id) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications/myPublications/${id}`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications/myPublications/${id}`;
     try {
       const { data } = await axios.get(URL, config);
       dispatch(myPublications(data));
@@ -179,7 +207,7 @@ export const actionCreatePublication = (values, token, id) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications`;
     try {
       await axios.post(
         URL,
@@ -192,6 +220,7 @@ export const actionCreatePublication = (values, token, id) => {
       );
       dispatch(actionGetMyPublications(token, id));
       dispatch(actionSetLoading(false));
+
       return { msg: "Publication created" };
     } catch (e) {
       throw { msg: e.response.data.msg };
@@ -208,7 +237,7 @@ export const actionDeletePublication = (token, user_id, product_id) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications/delete/${product_id}`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications/delete/${product_id}`;
     try {
       await axios.delete(URL, config);
       dispatch(actionGetMyPublications(token, user_id));
@@ -229,7 +258,7 @@ export const actionUpdatePublication = (values, token, id) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications/update/${values._id}`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications/update/${values._id}`;
     try {
       await axios.put(URL, values, config);
       dispatch(actionGetMyPublications(token, id));
@@ -249,7 +278,7 @@ export const actionGetDetails = (id) => {
         "Content-Type": "application/json",
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications/details/${id}`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications/details/${id}`;
     try {
       const { data } = await axios.get(URL, config);
       dispatch(setDetails(data));
@@ -280,11 +309,12 @@ export const actionBuy = (token, id) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/publications/buy/${id}`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications/buy/${id}`;
     try {
       await axios.get(URL, config);
       dispatch(actionGetAllPublications());
       dispatch(actionAuthenticateUser(token));
+      socket.emit("renderHome");
       return { msg: "purchased product" };
     } catch (e) {
       throw { msg: e.response.data.msg };
@@ -295,5 +325,65 @@ export const actionBuy = (token, id) => {
 export const actionSetCurrentPage = (value) => {
   return async function (dispatch) {
     dispatch(setCurrentPage(value));
+  };
+};
+
+// export const actionSetFilter = (values) => {
+//   return async function (dispatch) {
+//     dispatch(setFilter(values));
+//   };
+// };
+
+export const actionSetFilter = (filters) => {
+  return async function (dispatch) {
+    dispatch(actionSetLoading(true));
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications`;
+    try {
+      const { data } = await axios.get(URL, config);
+      let arrayFilter = data;
+      if (filters.category !== "")
+        arrayFilter = arrayFilter.filter(
+          (p) => p.category === filters.category
+        );
+      if (filters.subCategory !== "")
+        arrayFilter = arrayFilter.filter(
+          (p) => p.subCategory === filters.subCategory
+        );
+      if (filters.state !== "")
+        arrayFilter = arrayFilter.filter((p) => p.state === filters.state);
+      if (!isNaN(filters.price.min) && filters.price.min !== "")
+        arrayFilter = arrayFilter.filter(
+          (p) => Number(p.price) >= Number(filters.price.min)
+        );
+      if (!isNaN(filters.price.max) && filters.price.max !== "")
+        arrayFilter = arrayFilter.filter(
+          (p) => Number(p.price) <= Number(filters.price.max)
+        );
+      if (filters.search !== "") {
+        arrayFilter = arrayFilter.filter((p) =>
+          p.title.toLowerCase().split(" ").includes(filters.search)
+        );
+      }
+      dispatch(setCurrentPage(1));
+      dispatch(filterPublications(arrayFilter));
+      dispatch(setFilter(filters));
+      dispatch(actionSetLoading(false));
+    } catch (e) {
+      console.log(e);
+      // throw { msg: e.response.data.msg };
+    }
+  };
+};
+
+export const actionClearFilter = () => {
+  return async function (dispatch) {
+    dispatch(clearFilter());
+    dispatch(setCurrentPage(1));
+    dispatch(actionGetAllPublications());
   };
 };

@@ -7,6 +7,30 @@
   box-shadow: var(--global-box-shadow);
 }
 
+.card p {
+  word-break: break-all;
+}
+
+.card .view {
+  font-size: 1rem;
+  font-weight: 700;
+  width: 60px;
+  height: 30px;
+  border: var(--global-border);
+  border-radius: var(--global-radius);
+  background-color: var(--global--color);
+  color: #fff;
+}
+
+.card .view:hover {
+  background-color: var(--global--color-hover);
+  border: var(--global-border-hover);
+}
+
+.card .view:active {
+  background-color: var(--global--color-active);
+}
+
 .card:hover {
   border: var(--global-border-hover);
 }
@@ -39,7 +63,6 @@
   right: 5px;
   display: flex;
   gap: 5px;
-  z-index: 10;
 }
 
 .card .actions button {
@@ -72,7 +95,5 @@
 
   .card .publication img {
     margin: 0;
-    /* flex-basis: 20%; */
-    /* max-width: 200px; */
   }
 }

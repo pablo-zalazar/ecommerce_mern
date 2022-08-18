@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import { Server } from "socket.io";
 
 import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -31,6 +32,27 @@ app.use("/api/categories", categoryRoutes);
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(4000, () => {
+// app.listen(4000, () => {
+//   console.log(`Server connected on port ${PORT}`);
+// });
+
+const server = app.listen(PORT, () => {
   console.log(`Server connected on port ${PORT}`);
+});
+
+// Socket;
+const io = new Server(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: process.env.FRONTEND_URL,
+  },
+});
+
+io.on("connection", (socket) => {
+  socket.on("Update", (room) => {
+    socket.join(room);
+  });
+  socket.on("renderHome", () => {
+    socket.to(`${process.env.FRONTEND_URL}/`).emit("homeUpdate");
+  });
 });

@@ -79,7 +79,6 @@ export default function Publication({ product, owner, update, cart }) {
           <p>{product.state}</p>
           <p>stock: {product.stock}</p>
           <p>sold: {product.quantitySold}</p>
-
           <h3>price: ${product.price}</h3>
         </div>
       </div>

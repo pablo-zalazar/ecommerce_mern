@@ -5,6 +5,7 @@
   margin-right: -120px;
   transition: all 0.5s ease-in-out;
   opacity: 0;
+  z-index: 10;
 }
 
 .show {
@@ -14,6 +15,7 @@
   margin-right: 0;
   transition: all 0.5s ease-in-out;
   opacity: 1;
+  z-index: 10;
 }
 
 .userSettings {
@@ -26,11 +28,11 @@
   gap: 10px;
 }
 
-.userSettings div {
+.userSettings a {
   padding: 10px;
 }
 
-.userSettings div:hover {
+.userSettings a:hover {
   font-weight: 700;
   cursor: pointer;
   padding-left: 20px;

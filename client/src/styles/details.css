@@ -7,6 +7,10 @@
   padding: 10px;
 }
 
+.details p {
+  word-break: break-all;
+}
+
 .details > div {
   flex-grow: 1;
   max-width: 500px;

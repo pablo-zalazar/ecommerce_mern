@@ -18,10 +18,10 @@ export default function Header({
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.users);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
     const func = async () => {
-      const token = localStorage.getItem("token");
       if (token) dispatch(actionAuthenticateUser(token));
     };
     func();

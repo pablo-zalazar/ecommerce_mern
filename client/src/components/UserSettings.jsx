@@ -22,23 +22,15 @@ export default function UserSettings({ showSettings, setShowSettings }) {
   return Object.keys(user).length > 0 ? (
     <div className={showSettings ? "show" : "hidden"}>
       <div className="userSettings">
-        {user.admin && (
-          <div>
-            <Link to="#">Admin</Link>
-          </div>
-        )}
-        <div>
-          <Link to="#">Profile</Link>
-        </div>
-        <div>
-          <Link to="/myPublications">Articles</Link>
-        </div>
-        <div>
-          <Link to="/transactions">Transactions</Link>
-        </div>
-        <div onClick={() => handleLogout()}>
-          <Link to="/">Logout</Link>
-        </div>
+        {user.admin && <Link to="#">Admin</Link>}
+
+        <Link to="/Profile">Profile</Link>
+
+        <Link to="/myPublications">Articles</Link>
+
+        <Link onClick={() => handleLogout()} to="/">
+          Logout
+        </Link>
       </div>
     </div>
   ) : null;

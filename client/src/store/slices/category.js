@@ -25,7 +25,7 @@ export const actionGetcategories = () => {
         "Content-Type": "application/json",
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/categories`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/categories`;
     try {
       const { data } = await axios.get(URL, config);
       dispatch(allCategories(data));

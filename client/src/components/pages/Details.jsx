@@ -23,13 +23,14 @@ export default function Details() {
   const { user } = useSelector((state) => state.users);
   const { loading } = useSelector((state) => state.publications);
 
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
     dispatch(actionGetDetails(id));
     return () => dispatch(actionClearDetails());
   }, []);
 
   const handleBuy = async () => {
-    const token = localStorage.getItem("token");
     try {
       const { msg } = await dispatch(actionBuy(token, details._id));
       Alert("success", msg);
@@ -40,7 +41,6 @@ export default function Details() {
   };
 
   const addToCart = async () => {
-    const token = localStorage.getItem("token");
     try {
       const { msg } = await dispatch(actionAddToCart(token, details._id));
       Alert("success", msg);

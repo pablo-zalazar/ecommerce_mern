@@ -139,11 +139,12 @@ export const buyProduct = async (req, res) => {
       seller: publication.owner,
       product: publication._id,
     });
-    console.log(publication);
     if (user.money > publication.price) {
       user.money -= publication.price;
+      seller.money += publication.price;
       user.transactions.push(newTransaction._id);
       seller.transactions.push(newTransaction._id);
+
       publication.stock -= 1;
       publication.quantitySold += 1;
       await user.save();

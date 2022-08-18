@@ -38,7 +38,7 @@ export default function NewPassword() {
       const data = await dispatch(
         actionNewPassword({ token, password: { password: values.password } })
       );
-      console.log(data);
+
       Alert("success", data.msg);
       setChangedPassword(true);
       resetForm();
