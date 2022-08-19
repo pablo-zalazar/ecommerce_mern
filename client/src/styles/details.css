@@ -13,11 +13,11 @@
 
 .details > div {
   flex-grow: 1;
-  max-width: 500px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: repeat(3, auto);
+  grid-gap: 20px;
+  max-width: 1000px;
   border: 1px solid black;
-  gap: 10px;
   padding: 10px;
   background-color: #fff;
   border: var(--global-border-hover);
@@ -25,27 +25,50 @@
   box-shadow: var(--global-box-shadow);
 }
 
-.details .info {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.details > div > div {
+  padding: 10px;
 }
 
-.details .info img {
+.details .img {
+  grid-row: 1/2;
+  justify-self: center;
+}
+
+.details .img img {
   width: 150px;
   height: 150px;
   margin: 0 auto;
 }
 
-.details .info div {
+.details .data {
+  grid-row: 2/3;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 5px;
+  gap: 10px;
+}
+
+.details span p {
+  color: rgba(0, 0, 0, 0.55);
+}
+
+.details .description {
+  grid-row: 3/4;
+}
+
+.details .description h3 {
+  margin-bottom: 5px;
 }
 
 .details .actions {
+  display: flex;
+  gap: 5px;
+}
+
+.details .actions h3 {
+  text-align: center;
+}
+
+.details .actions div {
   display: flex;
   gap: 5px;
 }
@@ -90,8 +113,29 @@
   background-color: #bababa;
 }
 
-@media screen and (min-width: 900px) {
-  .details .info {
-    flex-direction: row;
+@media screen and (min-width: 600px) {
+  .details > div {
+    grid-template-columns: repeat(2, auto);
+    grid-template-rows: repeat(2, auto);
+  }
+
+  .details .img {
+    grid-column: 1/2;
+    grid-row: 1/2;
+  }
+
+  .details .img img {
+    width: 300px;
+    height: 300px;
+  }
+
+  .details .data {
+    grid-column: 2/3;
+    grid-row: 1/2;
+  }
+
+  .details .description {
+    grid-column: 1/3;
+    grid-row: 2/3;
   }
 }

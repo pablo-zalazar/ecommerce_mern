@@ -6,13 +6,14 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 
 import {
   actionGetAllPublications,
-  actionFilterPublications,
   actionClearSearch,
   actionSetCurrentPage,
   actionSetFilter,
   actionClearFilter,
+  // actionClearFilterPublications,
 } from "../../store/slices/publication";
 import { actionGetcategories } from "../../store/slices/category";
+
 import Publication from "../Publication";
 import LoadCard from "../LoadCard";
 import Pagination from "../Pagination";
@@ -30,10 +31,8 @@ export default function Home() {
   const [priceFilter, setPriceFIlter] = useState({ min: "", max: "" });
   const [publications, setPublications] = useState([]);
   const [error, setError] = useState("");
-  const [firstMount, setFirstMount] = useState(true);
-  const [filter, setFilter] = useState(filterRedux);
 
-  // console.log(filterRedux);
+  const token = localStorage.getItem("token");
 
   // pagination
   const publicationsPerPage = 10;
@@ -52,29 +51,27 @@ export default function Home() {
   useEffect(() => {
     if (!search) dispatch(actionGetAllPublications());
     dispatch(actionGetcategories());
-    socket.emit("Update", params);
+    socket.emit("UpdateHome", params);
     return () => {
       dispatch(actionClearSearch());
-      // dispatch(actionClearFilter());
+      dispatch(actionClearFilter());
+      // dispatch(actionClearFilterPublications());
     };
   }, []);
 
   useEffect(() => {
     socket.on("homeUpdate", async () => {
-      // await dispatch(actionGetAllPublications());
-      // await dispatch(actionFilterPublications({ ...filter, search }));
-      // setPublications(filterPublications.filter((p) => p.owner !== user._id));
-      return () => {
-        socket.off();
-      };
+      await dispatch(actionClearSearch());
+      await dispatch(actionSetFilter({ ...filterRedux, search }, currentPage));
     });
-  }, []);
+    return () => {
+      socket.off("homeUpdate");
+    };
+  }, [filterRedux, currentPage]);
 
   useEffect(() => {
     setPublications(filterPublications.filter((p) => p.owner !== user._id));
   }, [filterPublications, user]);
-
-  console.log(priceFilter);
 
   const handleFilter = (arr) => {
     if (arr[0] === "category")
@@ -94,7 +91,6 @@ export default function Home() {
     if (arr[0] === "price") {
       if (!isNaN(priceFilter.min) && !isNaN(priceFilter.max)) {
         if (priceFilter.min === "" && priceFilter.max === "") {
-          console.log("1");
           dispatch(
             actionSetFilter({
               ...filterRedux,
@@ -107,7 +103,6 @@ export default function Home() {
           setPriceFIlter({ min: "", max: "" });
           setError("");
         } else if (priceFilter.min !== "" && priceFilter.max === "") {
-          console.log("2");
           dispatch(
             actionSetFilter({
               ...filterRedux,
@@ -120,7 +115,6 @@ export default function Home() {
           setPriceFIlter({ min: "", max: "" });
           setError("");
         } else if (priceFilter.min === "" && priceFilter.max !== "") {
-          console.log("3");
           dispatch(
             actionSetFilter({
               ...filterRedux,
@@ -133,7 +127,6 @@ export default function Home() {
           setPriceFIlter({ min: "", max: "" });
           setError("");
         } else if (Number(priceFilter.min) < Number(priceFilter.max)) {
-          console.log("4");
           dispatch(
             actionSetFilter({
               ...filterRedux,

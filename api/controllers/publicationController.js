@@ -1,3 +1,6 @@
+import { uploadImage } from "../libs/cloudinary.js";
+import fs from "fs-extra";
+
 import Publication from "../models/Publication.js";
 import User from "../models/User.js";
 import Transaction from "../models/Transaction.js";
@@ -16,6 +19,7 @@ export const createPublication = async (req, res) => {
   try {
     const newPublication = new Publication(req.body);
 
+    const formats = ["jpg", "jpeg", "png"];
     if (!newPublication.title || newPublication.title.length <= 0) {
       return res.status(400).json({ msg: "Title is required" });
     }
@@ -50,6 +54,29 @@ export const createPublication = async (req, res) => {
       return res.status(400).json({ msg: "Category is required" });
     }
 
+    if (
+      !formats.includes(
+        req.files.image.name.split(".")[
+          req.files.image.name.split(".").length - 1
+        ]
+      )
+    ) {
+      return res
+        .status(400)
+        .send({ msg: "Invalid image format (jpg, jpeg, png)" });
+    }
+
+    if (req.files.image) {
+      const res = await uploadImage(req.files.image.tempFilePath);
+      await fs.remove(req.files.image.tempFilePath);
+
+      const image = {
+        url: res.secure_url,
+        public_id: res.public_id,
+      };
+      newPublication.image = image;
+    }
+
     newPublication.id = makeGeneratorIDRandom(4);
     newPublication.owner = req.user._id;
     if (newPublication.state === "used") newPublication.stock = 1;
@@ -59,7 +86,6 @@ export const createPublication = async (req, res) => {
     req.user.publications.push(newPublication._id);
     await req.user.save();
     return res.json({ newPublication });
-    return;
   } catch (e) {
     return res.status(400).json({ msg: e.message });
   }

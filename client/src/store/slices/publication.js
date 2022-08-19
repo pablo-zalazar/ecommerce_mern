@@ -15,7 +15,7 @@ export const publicationSlice = createSlice({
     myPublications: [],
     details: {},
     search: "",
-    loading: false,
+    loading: true,
     currentPage: 1,
     filterRedux: {
       category: "",
@@ -199,28 +199,37 @@ export const actionGetMyPublications = (token, id) => {
 };
 
 export const actionCreatePublication = (values, token, id) => {
+  console.log(values);
+  const body = {
+    title: values.title,
+    category: values.category,
+    description: values.description,
+    image: values.file,
+    price: Number(values.price),
+    state: values.state,
+    stock: Number(values.stock),
+    subCategory: values.subCategory,
+  };
+  console.log(body);
+  const form = new FormData();
+  for (let key in body) {
+    form.append(key, body[key]);
+  }
+  console.log(form);
   return async function (dispatch) {
     dispatch(actionSetLoading(true));
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
     };
     const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications`;
     try {
-      await axios.post(
-        URL,
-        {
-          ...values,
-          price: Number(values.price),
-          stock: Number(values.stock),
-        },
-        config
-      );
+      await axios.post(URL, form, config);
       dispatch(actionGetMyPublications(token, id));
       dispatch(actionSetLoading(false));
-
+      socket.emit("renderHome");
       return { msg: "Publication created" };
     } catch (e) {
       throw { msg: e.response.data.msg };
@@ -315,6 +324,9 @@ export const actionBuy = (token, id) => {
       dispatch(actionGetAllPublications());
       dispatch(actionAuthenticateUser(token));
       socket.emit("renderHome");
+      socket.emit("updatePublications");
+      socket.emit("updateTransaction");
+
       return { msg: "purchased product" };
     } catch (e) {
       throw { msg: e.response.data.msg };
@@ -334,7 +346,7 @@ export const actionSetCurrentPage = (value) => {
 //   };
 // };
 
-export const actionSetFilter = (filters) => {
+export const actionSetFilter = (filters, currentPage) => {
   return async function (dispatch) {
     dispatch(actionSetLoading(true));
     const config = {
@@ -369,7 +381,7 @@ export const actionSetFilter = (filters) => {
           p.title.toLowerCase().split(" ").includes(filters.search)
         );
       }
-      dispatch(setCurrentPage(1));
+      dispatch(setCurrentPage(currentPage ? currentPage : 1));
       dispatch(filterPublications(arrayFilter));
       dispatch(setFilter(filters));
       dispatch(actionSetLoading(false));

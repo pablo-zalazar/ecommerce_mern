@@ -8,7 +8,7 @@ import {
   actionClearDetails,
   actionBuy,
 } from "../../store/slices/publication";
-
+import { actionAuthenticateUser } from "../../store/slices/user";
 import { actionAddToCart } from "../../store/slices/user";
 
 import Alert from "../Alert";
@@ -53,20 +53,44 @@ export default function Details() {
     <div className="details">
       {!loading ? (
         <div>
-          <div className="info">
-            <div className="img">
-              <img src="/img/noImage.png" alt="img" />
-            </div>
-            <div>
-              <h2>{details.title}</h2>
-              <p>{details.category}</p>
-              <p>{details.subCategory}</p>
-              <p>In stock: {details.stock}</p>
-              <h2>${details.price}</h2>
+          <div className="img">
+            <img src="/img/noImage.png" alt="img" />
+          </div>
+
+          <div className="data">
+            <h2>{details.title}</h2>
+            <span>
+              <p>
+                {details.state} | {details.quantitySold} solds
+              </p>
+            </span>
+
+            <p>{details.category}</p>
+            <p>{details.subCategory}</p>
+            <p>In stock: {details.stock}</p>
+            <h3>${details.price}</h3>
+            <div className="actions">
+              {Object.keys(user).length > 0 ? (
+                <div>
+                  <button className="btnPrimary" onClick={() => handleBuy()}>
+                    Buy now
+                  </button>
+                  <button className="btnSecondary" onClick={() => addToCart()}>
+                    Add to cart
+                  </button>
+                </div>
+              ) : (
+                <h3>log in to buy</h3>
+              )}
             </div>
           </div>
-          <p>{details.description}</p>
-          {Object.keys(user).length > 0 &&
+
+          <div className="description">
+            <h3>Description</h3>
+            <p>{details.description}</p>
+          </div>
+
+          {/* {Object.keys(user).length > 0 &&
             Object.keys(details).length > 0 &&
             user?._id !== details?.owner._id && (
               <div className="actions">
@@ -77,7 +101,7 @@ export default function Details() {
                   Add to cart
                 </button>
               </div>
-            )}
+            )} */}
         </div>
       ) : (
         <LoadCard detail={true} />

@@ -7,11 +7,18 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import publicationRoutes from "./routes/publicationsRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import fileUpload from "express-fileupload";
 
 const app = express();
 app.use(express.json());
 dotenv.config();
 connectDB();
+app.use(
+  fileUpload({
+    tempFileDir: "./upload",
+    useTempFiles: true,
+  })
+);
 
 // Configurar CORS
 app.use(cors());
@@ -49,10 +56,27 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  socket.on("Update", (room) => {
+  socket.on("UpdateHome", (room) => {
     socket.join(room);
   });
   socket.on("renderHome", () => {
     socket.to(`${process.env.FRONTEND_URL}/`).emit("homeUpdate");
+  });
+
+  //------------------
+  socket.on("UpdateMyPublications", (room) => {
+    socket.join(room);
+  });
+  socket.on("updatePublications", () => {
+    socket
+      .to(`${process.env.FRONTEND_URL}/myPublications`)
+      .emit("MyPublicationsUpdate");
+  });
+  //------------------
+  socket.on("UpdateTransactions", (room) => {
+    socket.join(room);
+  });
+  socket.on("updateTransaction", () => {
+    socket.to(`${process.env.FRONTEND_URL}/Profile`).emit("transactionUpdate");
   });
 });

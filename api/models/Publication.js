@@ -42,6 +42,10 @@ const publicationSchema = mongoose.Schema(
       type: String,
       trim: true,
     },
+    image: {
+      public_id: String,
+      url: String,
+    },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

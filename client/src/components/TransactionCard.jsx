@@ -18,15 +18,16 @@ export default function Publication({ product, type }) {
       <div className="publication">
         <img src="/img/noImage.png" alt="img" />
         <div className="data">
-          {type === "buy" ? (
-            <h3>Sold to {product.seller}</h3>
+          {type !== "buy" ? (
+            <h3>Sold to {product.buyer}</h3>
           ) : (
-            <h3>bought from {product.buyer}</h3>
+            <h3>bought from {product.seller}</h3>
           )}
           <h3>{transactionDate}</h3>
           <h2>{product.publication.title}</h2>
           <h4>
-            {} - {product.publication.subCategory} - {product.publication.state}
+            {product.publication.category} - {product.publication.subCategory} -{" "}
+            {product.publication.state}
           </h4>
 
           {!showMore ? (

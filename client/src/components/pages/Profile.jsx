@@ -11,15 +11,32 @@ import {
 import TransactionCard from "../TransactionCard";
 import LoadCard from "../LoadCard";
 
+import io from "socket.io-client";
+let socket;
+socket = io(process.env.REACT_APP_BACKEND_URL);
+
 function Profile() {
   const dispatch = useDispatch();
   const { transactions, user, loading } = useSelector((state) => state.users);
   const token = localStorage.getItem("token");
 
+  // socket;
+  const params = window.location.href;
+
   useEffect(() => {
     dispatch(actionGetTransactions(token));
+    socket.emit("UpdateTransactions", params);
     return () => dispatch(actionClearTransactions());
   }, []);
+
+  useEffect(() => {
+    socket.on("transactionUpdate", async () => {
+      dispatch(actionGetTransactions(token));
+    });
+    return () => {
+      socket.off("transactionUpdate");
+    };
+  }, [transactions]);
 
   return (
     <div className="profile">
@@ -37,7 +54,7 @@ function Profile() {
           <LoadCard />
         ) : (
           <div className="cardContainer">
-            {transactions.length >= 0 ? (
+            {transactions.length > 0 ? (
               <>
                 {transactions.map((t) => (
                   <TransactionCard

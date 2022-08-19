@@ -13,12 +13,15 @@ import {
   actionCreatePublication,
   actionUpdatePublication,
 } from "../../store/slices/publication";
-
 import { actionGetcategories } from "../../store/slices/category";
 
 import Publication from "../Publication";
 import Alert from "../Alert";
 import LoadCard from "../LoadCard";
+
+import io from "socket.io-client";
+let socket;
+socket = io(process.env.REACT_APP_BACKEND_URL);
 
 export default function MyPublications() {
   const dispatch = useDispatch();
@@ -30,7 +33,11 @@ export default function MyPublications() {
   );
   const { categories } = useSelector((state) => state.categories);
   const [category, setCategory] = useState("");
+
   const token = localStorage.getItem("token");
+
+  // socket;
+  const params = window.location.href;
 
   let initialValues =
     Object.keys(publicationUpdate).length < 1
@@ -42,6 +49,7 @@ export default function MyPublications() {
           stock: "1",
           category: "",
           subCategory: "",
+          file: "",
         }
       : {
           title: publicationUpdate.title,
@@ -55,7 +63,17 @@ export default function MyPublications() {
 
   useEffect(() => {
     dispatch(actionGetcategories());
+    socket.emit("UpdateMyPublications", params);
   }, []);
+
+  useEffect(() => {
+    socket.on("MyPublicationsUpdate", async () => {
+      await dispatch(actionGetMyPublications(token, user._id));
+    });
+    return () => {
+      socket.off("MyPublicationsUpdate");
+    };
+  }, [user]);
 
   useEffect(() => {
     const func = async () => {
@@ -66,6 +84,7 @@ export default function MyPublications() {
   }, [user]);
 
   const required = "Required Field";
+  const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
 
   const createSchema = Yup.object().shape({
     title: Yup.string().required(required),
@@ -81,6 +100,9 @@ export default function MyPublications() {
       .required(required),
     category: Yup.string().required(required),
     subCategory: Yup.string().required(required),
+    file: Yup.mixed().test("fileType", "Unsupported File Format", (value) =>
+      SUPPORTED_FORMATS.includes(value.type)
+    ),
   });
 
   const update = async (publication) => {
@@ -89,6 +111,7 @@ export default function MyPublications() {
   };
 
   const onSubmit = async (values, resetForm) => {
+    console.log(values);
     if (create) {
       try {
         const { msg } = await dispatch(
@@ -119,7 +142,7 @@ export default function MyPublications() {
           )
         );
         setPublicationUpdate({});
-        resetForm();
+        // resetForm();
         Alert("success", msg);
         setCreate(true);
       } catch (e) {
@@ -140,7 +163,7 @@ export default function MyPublications() {
           validateOnBlur={false}
           onSubmit={(values, { resetForm }) => onSubmit(values, resetForm)}
         >
-          {(props) => (
+          {({ values, setFieldValue }) => (
             <Form>
               <div>
                 <label htmlFor="title">Title</label>
@@ -179,7 +202,7 @@ export default function MyPublications() {
                   <ErrorMessage name="state" />
                 </p>
               </div>
-              {props.values.state === "new" && (
+              {values.state === "new" && (
                 <div>
                   <label htmlFor="stock">Stock</label>
                   <Field name="stock" as="input" placeholder="stock" />
@@ -204,19 +227,17 @@ export default function MyPublications() {
                 </p>
               </div>
 
-              {category !== props.values.category
-                ? (props.values.subCategory = "")
-                : null}
-              {setCategory(props.values.category)}
+              {category !== values.category ? (values.subCategory = "") : null}
+              {setCategory(values.category)}
 
-              {props.values.category !== "" && (
+              {values.category !== "" && (
                 <div>
                   <label htmlFor="subCategory">subCategory</label>
                   <Field name="subCategory" id="subCategory" as="select">
                     <option value="">Select</option>
                     {categories?.map(
                       (cat) =>
-                        cat.name === props.values.category &&
+                        cat.name === values.category &&
                         cat.subCategories.map((subCat) => (
                           <option key={subCat}>{subCat}</option>
                         ))
@@ -228,6 +249,17 @@ export default function MyPublications() {
                   </p>
                 </div>
               )}
+              <div>
+                <label>Image</label>
+                <input
+                  type="file"
+                  className="file"
+                  onChange={(e) => setFieldValue("file", e.target.files[0])}
+                />
+                <p className="error">
+                  <ErrorMessage name="file" />
+                </p>
+              </div>
               <input type="submit" value={create ? "create" : "update"} />
             </Form>
           )}

@@ -14,6 +14,7 @@ import { actionRemoveFromCart } from "../store/slices/user";
 import Alert from "./Alert";
 
 export default function Publication({ product, owner, update, cart }) {
+  console.log(product);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -70,13 +71,12 @@ export default function Publication({ product, owner, update, cart }) {
         className="publication"
         onClick={() => navigate(`/details/${product._id}`)}
       >
-        <img src="/img/noImage.png" alt="img" />
+        <img src={product.image.url} alt="img" />
         <div className="data">
           <h2>{product.title}</h2>
           <h4>
-            {product.category} - {product.subCategory}
+            {product.category} - {product.subCategory} - {product.state}
           </h4>
-          <p>{product.state}</p>
           <p>stock: {product.stock}</p>
           <p>sold: {product.quantitySold}</p>
           <h3>price: ${product.price}</h3>
