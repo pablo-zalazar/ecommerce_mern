@@ -31,7 +31,6 @@ export default function ForgetPassword() {
 
   return (
     <div className="changePassword">
-      <h2>Forget password</h2>
       <Formik
         initialValues={{ email: "" }}
         validationSchema={createSchema}
@@ -41,6 +40,7 @@ export default function ForgetPassword() {
       >
         <Form>
           <div>
+            <h2>Forget password</h2>
             <label htmlFor="email">Email</label>
             <Field name="email" id="email" type="email" placeholder="email" />
             <p className="error">

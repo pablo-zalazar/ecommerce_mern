@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 10px;
+  gap: 20px;
 }
 
 .cart .leftSide h2 {
@@ -15,6 +15,14 @@
 .cart .leftSide .cardsContainer {
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+.cart .rightSide {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
   gap: 10px;
 }
 
@@ -82,11 +90,8 @@
   .cart .rightSide {
     flex-basis: 20%;
     max-width: 250px;
-    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
     height: 600px;
   }
 }

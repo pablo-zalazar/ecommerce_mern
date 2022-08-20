@@ -99,6 +99,7 @@
 
 .details .actions button.btnPrimary:active {
   background-color: var(--global--color-active);
+  top: 10px;
 }
 
 .details .actions .btnSecondary {

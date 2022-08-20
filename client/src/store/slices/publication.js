@@ -16,6 +16,7 @@ export const publicationSlice = createSlice({
     details: {},
     search: "",
     loading: true,
+    sort: "",
     currentPage: 1,
     filterRedux: {
       category: "",
@@ -31,6 +32,40 @@ export const publicationSlice = createSlice({
       state.filterPublications = action.payload;
     },
     filterPublications: (state, action) => {
+      let temp;
+      if (state.sort === "relevance") {
+        for (let j = 0; j < action.payload.length - 1; j++) {
+          for (let i = j + 1; i < action.payload.length; i++) {
+            if (
+              action.payload[j].quantitySold < action.payload[i].quantitySold
+            ) {
+              temp = action.payload[j];
+              action.payload[j] = action.payload[i];
+              action.payload[i] = temp;
+            }
+          }
+        }
+      } else if (state.sort === "higher") {
+        for (let j = 0; j < action.payload.length - 1; j++) {
+          for (let i = j + 1; i < action.payload.length; i++) {
+            if (action.payload[j].price < action.payload[i].price) {
+              temp = action.payload[j];
+              action.payload[j] = action.payload[i];
+              action.payload[i] = temp;
+            }
+          }
+        }
+      } else if (state.sort === "lower") {
+        for (let j = 0; j < action.payload.length - 1; j++) {
+          for (let i = j + 1; i < action.payload.length; i++) {
+            if (action.payload[j].price > action.payload[i].price) {
+              temp = action.payload[j];
+              action.payload[j] = action.payload[i];
+              action.payload[i] = temp;
+            }
+          }
+        }
+      }
       state.filterPublications = action.payload;
     },
     myPublications: (state, action) => {
@@ -69,6 +104,9 @@ export const publicationSlice = createSlice({
         search: "",
       };
     },
+    setSort: (state, action) => {
+      state.sort = action.payload;
+    },
   },
 });
 
@@ -85,6 +123,7 @@ export const {
   setCurrentPage,
   setFilter,
   clearFilter,
+  setSort,
 } = publicationSlice.actions;
 
 export default publicationSlice.reducer;
@@ -199,7 +238,6 @@ export const actionGetMyPublications = (token, id) => {
 };
 
 export const actionCreatePublication = (values, token, id) => {
-  console.log(values);
   const body = {
     title: values.title,
     category: values.category,
@@ -210,12 +248,10 @@ export const actionCreatePublication = (values, token, id) => {
     stock: Number(values.stock),
     subCategory: values.subCategory,
   };
-  console.log(body);
   const form = new FormData();
   for (let key in body) {
     form.append(key, body[key]);
   }
-  console.log(form);
   return async function (dispatch) {
     dispatch(actionSetLoading(true));
     const config = {
@@ -251,6 +287,7 @@ export const actionDeletePublication = (token, user_id, product_id) => {
       await axios.delete(URL, config);
       dispatch(actionGetMyPublications(token, user_id));
       dispatch(actionSetLoading(false));
+      socket.emit("renderHome");
       return { msg: "Publication deleted" };
     } catch (e) {
       throw { msg: e.response.data.msg };
@@ -259,17 +296,32 @@ export const actionDeletePublication = (token, user_id, product_id) => {
 };
 
 export const actionUpdatePublication = (values, token, id) => {
+  const body = {
+    title: values.title,
+    price: values.price,
+    description: values.description,
+    state: values.state,
+    stock: values.stock,
+    category: values.category,
+    subCategory: values.subCategory,
+    file: values.file,
+  };
+
+  const form = new FormData();
+  for (let key in body) {
+    form.append(key, body[key]);
+  }
   return async function (dispatch) {
     dispatch(actionSetLoading(true));
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "multipart/form-data",
         Authorization: `Bearer ${token}`,
       },
     };
-    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications/update/${values._id}`;
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/publications/update/${values.id}`;
     try {
-      await axios.put(URL, values, config);
+      await axios.put(URL, body, config);
       dispatch(actionGetMyPublications(token, id));
       dispatch(actionSetLoading(false));
       return { msg: "Publication updated" };
@@ -381,6 +433,7 @@ export const actionSetFilter = (filters, currentPage) => {
           p.title.toLowerCase().split(" ").includes(filters.search)
         );
       }
+
       dispatch(setCurrentPage(currentPage ? currentPage : 1));
       dispatch(filterPublications(arrayFilter));
       dispatch(setFilter(filters));
@@ -397,5 +450,11 @@ export const actionClearFilter = () => {
     dispatch(clearFilter());
     dispatch(setCurrentPage(1));
     dispatch(actionGetAllPublications());
+  };
+};
+
+export const actionSetSort = (sort) => {
+  return async function (dispatch) {
+    dispatch(setSort(sort));
   };
 };

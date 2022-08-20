@@ -14,11 +14,14 @@ export default function Pagination({ perPage, amount, pagination }) {
 
   return (
     <nav>
-      <h3>Pages</h3>
       <div className="pagination">
-        {currentPage - 1 > 0 ? (
-          <p onClick={() => pagination(currentPage - 1)}>previous</p>
-        ) : null}
+        <p
+          className={currentPage - 1 > 0 ? "showButton" : "hideButton"}
+          onClick={() => pagination(currentPage - 1)}
+        >
+          previous
+        </p>
+
         {pageNumbers &&
           pageNumbers.map((number, i) =>
             number === currentPage ? (
@@ -35,9 +38,13 @@ export default function Pagination({ perPage, amount, pagination }) {
               </button>
             )
           )}
-        {pages > currentPage ? (
-          <p onClick={() => pagination(currentPage + 1)}>next</p>
-        ) : null}
+
+        <p
+          className={pages > currentPage ? "showButton" : "hideButton"}
+          onClick={() => pagination(currentPage + 1)}
+        >
+          next
+        </p>
       </div>
     </nav>
   );

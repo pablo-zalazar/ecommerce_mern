@@ -7,7 +7,7 @@ export default function Publication({ product, type }) {
   const transactionDate = product.date.toLocaleString().split("T")[0];
 
   const [showMore, setShowMore] = useState(false);
-
+  console.log(product);
   const limitString = (str) => {
     if (str.length > 200)
       return { string: str.slice(0, 197).concat("..."), addButton: true };
@@ -16,7 +16,7 @@ export default function Publication({ product, type }) {
   return (
     <div className="card">
       <div className="publication">
-        <img src="/img/noImage.png" alt="img" />
+        <img src={product.publication.image.url} alt="img" />
         <div className="data">
           {type !== "buy" ? (
             <h3>Sold to {product.buyer}</h3>

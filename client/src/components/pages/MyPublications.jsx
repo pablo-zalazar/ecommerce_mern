@@ -35,7 +35,6 @@ export default function MyPublications() {
   const [category, setCategory] = useState("");
 
   const token = localStorage.getItem("token");
-
   // socket;
   const params = window.location.href;
 
@@ -84,7 +83,12 @@ export default function MyPublications() {
   }, [user]);
 
   const required = "Required Field";
-  const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+  const SUPPORTED_FORMATS = [
+    "image/jpg",
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+  ];
 
   const createSchema = Yup.object().shape({
     title: Yup.string().required(required),
@@ -100,24 +104,42 @@ export default function MyPublications() {
       .required(required),
     category: Yup.string().required(required),
     subCategory: Yup.string().required(required),
-    file: Yup.mixed().test("fileType", "Unsupported File Format", (value) =>
-      SUPPORTED_FORMATS.includes(value.type)
-    ),
+    file: Yup.mixed()
+      .required(required)
+      .test(
+        "fileType",
+        "Unsupported File Format",
+        (value) => value && SUPPORTED_FORMATS.includes(value.type)
+      ),
+  });
+
+  const updateSchema = Yup.object().shape({
+    title: Yup.string().required(required),
+    price: Yup.number()
+      .typeError("must be a number")
+      .min(1, "Price must be greater than 0")
+      .required(required),
+    description: Yup.string().required(required),
+    state: Yup.string().required(required),
+    stock: Yup.number()
+      .typeError("must be a number")
+      .min(1, "Price must be greater than 0")
+      .required(required),
+    category: Yup.string().required(required),
+    subCategory: Yup.string().required(required),
   });
 
   const update = async (publication) => {
     setPublicationUpdate(publication);
     setCreate(false);
   };
-
   const onSubmit = async (values, resetForm) => {
-    console.log(values);
     if (create) {
       try {
         const { msg } = await dispatch(
           actionCreatePublication(values, token, user._id)
         );
-        resetForm();
+
         Alert("success", msg);
         setCreate(true);
       } catch (e) {
@@ -128,7 +150,7 @@ export default function MyPublications() {
         const { msg } = await dispatch(
           actionUpdatePublication(
             {
-              ...publicationUpdate,
+              id: publicationUpdate._id,
               title: values.title,
               price: values.price,
               description: values.description,
@@ -136,19 +158,21 @@ export default function MyPublications() {
               stock: values.stock,
               category: values.category,
               subCategory: values.subCategory,
+              file: values.file,
             },
             token,
             user._id
           )
         );
         setPublicationUpdate({});
-        // resetForm();
         Alert("success", msg);
         setCreate(true);
       } catch (e) {
         console.log(e);
       }
     }
+    resetForm();
+    document.getElementById("file").value = "";
   };
 
   return (
@@ -158,7 +182,11 @@ export default function MyPublications() {
         <Formik
           initialValues={initialValues}
           enableReinitialize={true}
-          validationSchema={createSchema}
+          validationSchema={
+            Object.keys(publicationUpdate).length > 0
+              ? updateSchema
+              : createSchema
+          }
           validateOnChange={false}
           validateOnBlur={false}
           onSubmit={(values, { resetForm }) => onSubmit(values, resetForm)}
@@ -251,9 +279,12 @@ export default function MyPublications() {
               )}
               <div>
                 <label>Image</label>
-                <input
+                <Field
                   type="file"
                   className="file"
+                  name="file"
+                  id="file"
+                  value={undefined}
                   onChange={(e) => setFieldValue("file", e.target.files[0])}
                 />
                 <p className="error">

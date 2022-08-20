@@ -10,6 +10,7 @@ import {
   actionSetCurrentPage,
   actionSetFilter,
   actionClearFilter,
+  actionSetSort,
   // actionClearFilterPublications,
 } from "../../store/slices/publication";
 import { actionGetcategories } from "../../store/slices/category";
@@ -24,8 +25,14 @@ socket = io(process.env.REACT_APP_BACKEND_URL);
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { filterPublications, search, loading, currentPage, filterRedux } =
-    useSelector((state) => state.publications);
+  const {
+    filterPublications,
+    search,
+    loading,
+    currentPage,
+    filterRedux,
+    sort,
+  } = useSelector((state) => state.publications);
   const { categories } = useSelector((state) => state.categories);
   const { user } = useSelector((state) => state.users);
   const [priceFilter, setPriceFIlter] = useState({ min: "", max: "" });
@@ -55,6 +62,7 @@ export default function Home() {
     return () => {
       dispatch(actionClearSearch());
       dispatch(actionClearFilter());
+      dispatch(actionSetSort(""));
       // dispatch(actionClearFilterPublications());
     };
   }, []);
@@ -71,7 +79,7 @@ export default function Home() {
 
   useEffect(() => {
     setPublications(filterPublications.filter((p) => p.owner !== user._id));
-  }, [filterPublications, user]);
+  }, [filterPublications, user, sort]);
 
   const handleFilter = (arr) => {
     if (arr[0] === "category")
@@ -178,16 +186,27 @@ export default function Home() {
 
   const handleReset = () => {
     dispatch(actionClearSearch());
+    dispatch(actionSetSort(""));
     setPriceFIlter({ min: "", max: "" });
     setError("");
     dispatch(actionClearFilter());
+  };
+
+  const handleSort = (e) => {
+    dispatch(actionSetSort(e.target.value));
+    dispatch(actionSetFilter({ ...filterRedux }, currentPage, sort));
   };
 
   return (
     <div className="main">
       <section className="filters">
         {!loading && <h3>{publications.length} Results</h3>}
-
+        <select value={sort} onChange={handleSort}>
+          <option value="">No sort</option>
+          <option value="relevance">relevance</option>
+          <option value="higher">higher price</option>
+          <option value="lower">lower price</option>
+        </select>
         <h2>Filters</h2>
         {search && <h3>{search}</h3>}
         <div className="filtersName">

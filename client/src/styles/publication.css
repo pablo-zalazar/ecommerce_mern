@@ -55,6 +55,7 @@
   justify-content: flex-start;
   gap: 10px;
   border: 1px soldi black;
+  max-width: 250px;
 }
 
 .card .actions {

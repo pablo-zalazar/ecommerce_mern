@@ -3,7 +3,13 @@ import axios from "axios";
 
 export const userSlice = createSlice({
   name: "user",
-  initialState: { user: {}, error: "", loading: true, transactions: [] },
+  initialState: {
+    user: {},
+    error: "",
+    loading: true,
+    transactions: [],
+    showSettings: false,
+  },
   reducers: {
     login: (state, action) => {
       state.user = action.payload;
@@ -20,11 +26,20 @@ export const userSlice = createSlice({
     clearTransactions: (state) => {
       state.transactions = [];
     },
+    setShowSettings: (state) => {
+      state.showSettings = !state.showSettings;
+    },
   },
 });
 
-export const { login, logout, setLoading, setTransactions, clearTransactions } =
-  userSlice.actions;
+export const {
+  login,
+  logout,
+  setLoading,
+  setTransactions,
+  clearTransactions,
+  setShowSettings,
+} = userSlice.actions;
 
 export default userSlice.reducer;
 
@@ -183,7 +198,7 @@ export const actionRemoveFromCart = (token, id) => {
       const { data } = await axios.get(URL, config);
 
       dispatch(actionAuthenticateUser(token));
-      return { msg: "product romved from cart" };
+      return { msg: "product romved from your cart" };
     } catch (e) {
       throw { msg: e.response.data.msg };
     }
@@ -253,5 +268,11 @@ export const actionGetTransactions = (token) => {
 export const actionClearTransactions = () => {
   return async function (dispatch) {
     dispatch(clearTransactions());
+  };
+};
+
+export const actionSetShowSettings = (value) => {
+  return async function (dispatch) {
+    dispatch(setShowSettings(value));
   };
 };

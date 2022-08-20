@@ -12,21 +12,15 @@ import UserSettings from "./UserSettings";
 export default function Layout({ children }) {
   const [modalRegister, setModalRegister] = useState(false);
   const [modalLogin, setModalLogin] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
 
   return (
     <div className="layout">
       <Header
         setModalRegister={setModalRegister}
         setModalLogin={setModalLogin}
-        showSettings={showSettings}
-        setShowSettings={setShowSettings}
       />
       <div className="content">
-        <UserSettings
-          showSettings={showSettings}
-          setShowSettings={setShowSettings}
-        />
+        <UserSettings />
         <div className="children">{children}</div>
       </div>
       <Footer />

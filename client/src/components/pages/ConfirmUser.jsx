@@ -3,7 +3,6 @@ import "../../styles/confirmUser.css";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useParams, Link } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import Alert from "../Alert";
@@ -34,7 +33,6 @@ export default function ConfirmUser() {
           <Link to="/">Return</Link>
         </div>
       </div>
-      <ToastContainer />
     </>
   );
 }

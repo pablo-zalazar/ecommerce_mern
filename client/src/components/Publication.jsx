@@ -14,7 +14,6 @@ import { actionRemoveFromCart } from "../store/slices/user";
 import Alert from "./Alert";
 
 export default function Publication({ product, owner, update, cart }) {
-  console.log(product);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = localStorage.getItem("token");

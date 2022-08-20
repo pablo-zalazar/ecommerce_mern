@@ -213,7 +213,7 @@ export const getTransactions = async (req, res) => {
         const seller = await User.findById(t.seller, "user");
         const publication = await Publication.findById(
           t.product,
-          "title price description state category subCategory"
+          "title price description state category subCategory image"
         );
         return {
           id: t._id,

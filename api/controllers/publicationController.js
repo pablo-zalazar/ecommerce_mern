@@ -19,7 +19,7 @@ export const createPublication = async (req, res) => {
   try {
     const newPublication = new Publication(req.body);
 
-    const formats = ["jpg", "jpeg", "png"];
+    const formats = ["jpg", "jpeg", "png", "webp"];
     if (!newPublication.title || newPublication.title.length <= 0) {
       return res.status(400).json({ msg: "Title is required" });
     }
@@ -63,7 +63,7 @@ export const createPublication = async (req, res) => {
     ) {
       return res
         .status(400)
-        .send({ msg: "Invalid image format (jpg, jpeg, png)" });
+        .send({ msg: "Invalid image format (jpg, jpeg, png, webp)" });
     }
 
     if (req.files.image) {
@@ -130,8 +130,35 @@ export const deletePublication = async (req, res) => {
 
 export const updatePublication = async (req, res) => {
   const { id } = req.params;
+  const formats = ["jpg", "jpeg", "png", "webp"];
+  let publicationUpdated = req.body;
   try {
-    await Publication.findByIdAndUpdate(id, req.body);
+    if (req.files) {
+      if (
+        !formats.includes(
+          req.files.file.name.split(".")[
+            req.files.file.name.split(".").length - 1
+          ]
+        )
+      ) {
+        return res
+          .status(400)
+          .send({ msg: "Invalid image format (jpg, jpeg, png, webp)" });
+      }
+
+      if (req.files.file) {
+        const res = await uploadImage(req.files.file.tempFilePath);
+        await fs.remove(req.files.file.tempFilePath);
+
+        const image = {
+          url: res.secure_url,
+          public_id: res.public_id,
+        };
+        publicationUpdated.image = image;
+      }
+    }
+
+    await Publication.findByIdAndUpdate(id, publicationUpdated);
     const user = await User.findById(req.user._id).populate("publications");
     const newUserPublications = user.publications.map((p) =>
       p.id !== req.body._id ? p : req.body

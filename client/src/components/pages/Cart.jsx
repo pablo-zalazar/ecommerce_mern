@@ -8,7 +8,7 @@ import { actionBuyCart, actionClearCart } from "../../store/slices/user";
 
 export default function Cart() {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.users);
+  const { user, loading } = useSelector((state) => state.users);
   const [total, setTotal] = useState(0);
   const token = localStorage.getItem("token");
 
@@ -53,11 +53,11 @@ export default function Cart() {
               <h2>Empty</h2>
             )
           ) : (
-            <p>Cargando</p>
+            <p>Loading</p>
           )}
         </div>
       </div>
-      {Object.keys(user).length > 0 && (
+      {user.cart.length > 0 && (
         <div className="rightSide">
           <h2>Total: ${total}</h2>
           <div className="actions">

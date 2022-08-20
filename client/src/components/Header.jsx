@@ -1,23 +1,22 @@
 import React from "react";
 import "../styles/header.css";
 import { useDispatch, useSelector } from "react-redux";
-import { GiHamburgerMenu, GiShoppingCart } from "react-icons/gi";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { MdOutlineAddShoppingCart } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import Searchbar from "./Searchbar";
 import { useEffect } from "react";
 
-import { actionAuthenticateUser } from "../store/slices/user";
+import {
+  actionAuthenticateUser,
+  actionSetShowSettings,
+} from "../store/slices/user";
 
-export default function Header({
-  setModalLogin,
-  setModalRegister,
-  showSettings,
-  setShowSettings,
-}) {
+export default function Header({ setModalLogin, setModalRegister }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user } = useSelector((state) => state.users);
+  const { user, setShowSettings } = useSelector((state) => state.users);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -33,23 +32,23 @@ export default function Header({
         <Link to="/">
           <img src="/img/logo.png" alt="logo" />
         </Link>
-        <h2>
+        <h3>
           Hello {user.user} <p>${user.money}</p>
-        </h2>
+        </h3>
       </div>
       <div className="rightSide">
         <Searchbar />
         <div className="buttons">
-          <button>
-            <GiShoppingCart
-              className="icon"
-              onClick={() => navigate("/cart")}
-            />
+          <button className="buttonCart" onClick={() => navigate("/cart")}>
+            {user.cart.length > 0 && (
+              <p className="cartNumber">{user.cart.length}</p>
+            )}
+            <MdOutlineAddShoppingCart className="icon" />
           </button>
           <button>
             <GiHamburgerMenu
               className="icon"
-              onClick={() => setShowSettings(!showSettings)}
+              onClick={() => dispatch(actionSetShowSettings(!setShowSettings))}
             />
           </button>
         </div>

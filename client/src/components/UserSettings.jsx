@@ -3,19 +3,19 @@ import "../styles/userSettings.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
-import { actionUserLogout } from "../store/slices/user";
+import { actionUserLogout, actionSetShowSettings } from "../store/slices/user";
 import { actionClearMyPublications } from "../store/slices/publication";
 
-export default function UserSettings({ showSettings, setShowSettings }) {
+export default function UserSettings() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { showSettings } = useSelector((state) => state.users);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch(actionUserLogout());
     dispatch(actionClearMyPublications());
-    setShowSettings(!showSettings);
-    navigate("/");
+    dispatch(actionSetShowSettings(false));
   };
 
   const { user } = useSelector((state) => state.users);
@@ -24,9 +24,19 @@ export default function UserSettings({ showSettings, setShowSettings }) {
       <div className="userSettings">
         {user.admin && <Link to="#">Admin</Link>}
 
-        <Link to="/Profile">Profile</Link>
+        <Link
+          onClick={() => dispatch(actionSetShowSettings(false))}
+          to="/Profile"
+        >
+          Profile
+        </Link>
 
-        <Link to="/myPublications">Articles</Link>
+        <Link
+          onClick={() => dispatch(actionSetShowSettings(false))}
+          to="/myPublications"
+        >
+          Articles
+        </Link>
 
         <Link onClick={() => handleLogout()} to="/">
           Logout
