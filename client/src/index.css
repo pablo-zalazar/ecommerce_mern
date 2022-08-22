@@ -7,11 +7,25 @@
     Arial, sans-serif;
 }
 
+h2 {
+  font-size: 28px;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+h4 {
+  font-size: 20px;
+}
+
 #root {
   overflow-x: hidden;
 }
 
 :root {
+  --global--bg-color: #eeeeee;
+
   --global--color: #757575;
   --global--color-hover: #575656;
   --global--color-active: #404040;

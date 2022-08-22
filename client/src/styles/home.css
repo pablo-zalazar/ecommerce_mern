@@ -60,12 +60,22 @@
 .main .filters .categories {
   display: flex;
   flex-direction: column;
+  gap: 20px;
+}
+
+.main .filters .categories > div {
+  display: flex;
+  flex-direction: column;
   gap: 5px;
 }
 
 .main .filters .categories * {
   cursor: pointer;
   width: max-content;
+}
+
+.main .filters .categories div *:hover {
+  padding-left: 10px;
 }
 
 .main .filters .priceFilter {
@@ -127,10 +137,27 @@
   gap: 10px;
 }
 
-.main .active {
+.main .cards .sort {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.main .cards .sort p {
+  font-weight: 700;
+}
+
+.main .cards .sort select {
+  width: 150px;
+  border: none;
+  padding: 2px;
+  outline: none;
+}
+
+.main .filtActive {
   font-weight: 700;
   padding-left: 10px;
-  /* pointer-events: none; */
 }
 
 @media screen and (min-width: 600px) {

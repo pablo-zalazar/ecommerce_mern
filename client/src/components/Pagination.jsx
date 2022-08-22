@@ -12,12 +12,19 @@ export default function Pagination({ perPage, amount, pagination }) {
     pageNumbers.push(i);
   }
 
+  const scrollUp = () => {
+    window.scrollTo(0, 0);
+  };
+
   return (
     <nav>
       <div className="pagination">
         <p
           className={currentPage - 1 > 0 ? "showButton" : "hideButton"}
-          onClick={() => pagination(currentPage - 1)}
+          onClick={() => {
+            scrollUp();
+            pagination(currentPage - 1);
+          }}
         >
           previous
         </p>
@@ -41,7 +48,10 @@ export default function Pagination({ perPage, amount, pagination }) {
 
         <p
           className={pages > currentPage ? "showButton" : "hideButton"}
-          onClick={() => pagination(currentPage + 1)}
+          onClick={() => {
+            scrollUp();
+            pagination(currentPage + 1);
+          }}
         >
           next
         </p>

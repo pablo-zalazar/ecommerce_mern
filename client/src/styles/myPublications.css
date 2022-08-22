@@ -21,6 +21,30 @@
   color: #f00;
 }
 
+.formContainer .file {
+  border: none;
+  padding: 0;
+}
+
+.formContainer .file::file-selector-button {
+  border: var(--global-border);
+  border-radius: var(--global-radius);
+  padding: 5px;
+  background-color: var(--global--color);
+  color: #fff;
+  font-weight: 700;
+  content: "asd";
+}
+
+.formContainer .file::file-selector-button:hover {
+  cursor: pointer;
+  background-color: var(--global--color-hover);
+}
+
+.formContainer .file::file-selector-button:active {
+  background-color: var(--global--color-active);
+}
+
 .myPublications h2 {
   margin-bottom: 20px;
 }

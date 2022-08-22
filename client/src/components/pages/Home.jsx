@@ -42,7 +42,7 @@ export default function Home() {
   const token = localStorage.getItem("token");
 
   // pagination
-  const publicationsPerPage = 10;
+  const publicationsPerPage = 8;
 
   const lastGameIndex = currentPage * publicationsPerPage;
   const firstGameIndex = lastGameIndex - publicationsPerPage;
@@ -201,12 +201,11 @@ export default function Home() {
     <div className="main">
       <section className="filters">
         {!loading && <h3>{publications.length} Results</h3>}
-        <select value={sort} onChange={handleSort}>
-          <option value="">No sort</option>
-          <option value="relevance">relevance</option>
-          <option value="higher">higher price</option>
-          <option value="lower">lower price</option>
-        </select>
+
+        <button className="reset" onClick={() => handleReset()}>
+          reset
+        </button>
+
         <h2>Filters</h2>
         {search && <h3>{search}</h3>}
         <div className="filtersName">
@@ -245,43 +244,44 @@ export default function Home() {
             )
           )}
         </div>
-        <button className="reset" onClick={() => handleReset()}>
-          reset
-        </button>
-        <h3>Categories</h3>
-        {Object.keys(categories).length > 0 &&
-          categories?.map((cat) => (
-            <div key={cat._id} className="categories">
-              <h4
-                key={cat._id}
-                onClick={() => handleFilter(["category", cat.name])}
-                className={filterRedux.category === cat.name ? "active" : ""}
-              >
-                {cat.name}
-              </h4>
-              {cat?.subCategories?.map(
-                (subCat, i) =>
-                  cat.name !== "Other" && (
-                    <p
-                      key={cat._id + i}
-                      onClick={() =>
-                        handleFilter(["subCategory", cat.name, subCat])
-                      }
-                      className={
-                        filterRedux.subCategory === subCat
-                          ? filterRedux.category === cat.name
-                            ? "active"
-                            : ""
-                          : ""
-                      }
-                    >
-                      {subCat}
-                    </p>
-                  )
-              )}
-            </div>
-          ))}
 
+        <h3>Categories</h3>
+        <div className="categories">
+          {Object.keys(categories).length > 0 &&
+            categories?.map((cat) => (
+              <div key={cat._id}>
+                <h4
+                  key={cat._id}
+                  onClick={() => handleFilter(["category", cat.name])}
+                  className={
+                    filterRedux.category === cat.name ? "filtActive" : ""
+                  }
+                >
+                  {cat.name}
+                </h4>
+                {cat?.subCategories?.map(
+                  (subCat, i) =>
+                    cat.name !== "Other" && (
+                      <p
+                        key={cat._id + i}
+                        onClick={() =>
+                          handleFilter(["subCategory", cat.name, subCat])
+                        }
+                        className={
+                          filterRedux.subCategory === subCat
+                            ? filterRedux.category === cat.name
+                              ? "filtActive"
+                              : ""
+                            : ""
+                        }
+                      >
+                        {subCat}
+                      </p>
+                    )
+                )}
+              </div>
+            ))}
+        </div>
         <h3>State</h3>
         <select onChange={(e) => handleFilter(["state", e.target.value])}>
           <option value="">all</option>
@@ -321,14 +321,41 @@ export default function Home() {
           <LoadCard />
         ) : currentPublications.length > 0 ? (
           <>
+            <div className="sort">
+              <p>Sort by </p>
+              <select value={sort} onChange={handleSort}>
+                <option className={sort === "" && "sortActive"} value="">
+                  No sort
+                </option>
+                <option
+                  className={sort === "relevance" && "sortActive"}
+                  value="relevance"
+                >
+                  Relevance
+                </option>
+                <option
+                  className={sort === "higher" && "sortActive"}
+                  value="higher"
+                >
+                  Higher price
+                </option>
+                <option
+                  className={sort === "lower" && "sortActive"}
+                  value="lower"
+                >
+                  Lower price
+                </option>
+              </select>
+            </div>
+
+            {currentPublications?.map((publication) => (
+              <Publication key={publication._id} product={publication} />
+            ))}
             <Pagination
               perPage={publicationsPerPage}
               amount={publications.length}
               pagination={pagination}
             />
-            {currentPublications?.map((publication) => (
-              <Publication key={publication._id} product={publication} />
-            ))}
           </>
         ) : (
           <h2>no publications</h2>

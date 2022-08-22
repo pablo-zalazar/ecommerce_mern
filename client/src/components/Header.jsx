@@ -64,8 +64,22 @@ export default function Header({ setModalLogin, setModalRegister }) {
       <div className="rightSide">
         <Searchbar />
         <div className="buttons">
-          <button onClick={() => setModalLogin(true)}>Log in</button>
-          <button onClick={() => setModalRegister(true)}>Register</button>
+          <button
+            onClick={() => {
+              setModalRegister(false);
+              setModalLogin(true);
+            }}
+          >
+            Log in
+          </button>
+          <button
+            onClick={() => {
+              setModalLogin(false);
+              setModalRegister(true);
+            }}
+          >
+            Register
+          </button>
         </div>
       </div>
     </header>

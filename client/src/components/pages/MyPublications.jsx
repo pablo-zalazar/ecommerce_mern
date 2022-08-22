@@ -4,6 +4,7 @@ import "../../styles/forms.css";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
+import { FaCamera } from "react-icons/fa";
 import { Formik, Form, ErrorMessage, Field } from "formik";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -287,6 +288,7 @@ export default function MyPublications() {
                   value={undefined}
                   onChange={(e) => setFieldValue("file", e.target.files[0])}
                 />
+
                 <p className="error">
                   <ErrorMessage name="file" />
                 </p>

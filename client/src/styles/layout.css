@@ -1,9 +1,16 @@
 .layout {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .layout .content {
-  min-height: 80vh;
-  background-color: #eeeeee;
+  flex-grow: 1;
+  background-color: var(--global--bg-color);
   position: relative;
+  /* display: flex; */
+}
+
+.layout .content .children {
+  /* flex-grow: 1; */
 }
