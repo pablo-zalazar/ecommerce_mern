@@ -1,6 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+import io from "socket.io-client";
+let socket;
+socket = io(process.env.REACT_APP_BACKEND_URL);
+
 export const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -26,8 +30,8 @@ export const userSlice = createSlice({
     clearTransactions: (state) => {
       state.transactions = [];
     },
-    setShowSettings: (state) => {
-      state.showSettings = !state.showSettings;
+    setShowSettings: (state, action) => {
+      state.showSettings = action.payload;
     },
   },
 });
@@ -274,5 +278,44 @@ export const actionClearTransactions = () => {
 export const actionSetShowSettings = (value) => {
   return async function (dispatch) {
     dispatch(setShowSettings(value));
+  };
+};
+
+export const actionBuyCash = (token, value) => {
+  return async function () {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const url = `${process.env.REACT_APP_BACKEND_URL}/api/process-payment`;
+      const { data } = await axios.post(url, { value }, config);
+      socket.emit("Redirect", data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+};
+
+export const actionSetCoins = (token, value) => {
+  return async function (dispatch) {
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const url = `${process.env.REACT_APP_BACKEND_URL}/api/process-payment/setcoins`;
+      const { data } = await axios.put(url, { value }, config);
+      dispatch(actionAuthenticateUser(token));
+      return data.msg;
+      // socket.emit("Redirect", json.data);
+      return;
+    } catch (e) {
+      console.log(e);
+    }
   };
 };

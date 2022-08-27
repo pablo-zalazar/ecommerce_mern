@@ -13,12 +13,12 @@
 .profile .options .actions {
   padding-top: 20px;
   display: flex;
+  flex-wrap: wrap;
   gap: 5px;
   align-items: center;
 }
 
-.profile .options .actions button {
-  position: relative;
+.profile .options .actions .action {
   width: 100px;
   height: 55px;
   padding: 10px;
@@ -28,14 +28,15 @@
   border-radius: var(--global-radius);
   font-weight: 700;
   color: #fff;
+  text-decoration: none;
 }
 
-.profile .options .actions button:hover {
+.profile .options .action button:hover {
   background-color: var(--global--color-hover);
   border: var(--global-border-hover);
 }
 
-.profile .options .actions button:active {
+.profile .options .action button:active {
   background-color: var(--global--color-active);
 }
 

@@ -101,7 +101,7 @@ export const forgetPassword = async (req, res) => {
       token: user.token,
     });
 
-    res.json({ msg: "Email sent" });
+    res.json({ msg: `mail sended to ${email}` });
   } catch (e) {
     return res.status(400).json({ msg: e.message });
   }

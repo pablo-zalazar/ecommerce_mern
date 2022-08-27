@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import "../../styles/cart.css";
 
 import Publication from "../Publication";
+import { actionBuy } from "../../store/slices/publication";
 import Alert from "../Alert";
 import { actionBuyCart, actionClearCart } from "../../store/slices/user";
 
@@ -23,6 +24,8 @@ export default function Cart() {
 
   const handleBuyCart = async () => {
     try {
+      console.log(user.cart);
+      user.cart.forEach(async (e) => await dispatch(actionBuy(token, e._id)));
       const { msg } = await dispatch(actionBuyCart(token, total));
       Alert("success", msg);
     } catch (e) {

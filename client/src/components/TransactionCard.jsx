@@ -7,7 +7,7 @@ export default function Publication({ product, type }) {
   const transactionDate = product.date.toLocaleString().split("T")[0];
 
   const [showMore, setShowMore] = useState(false);
-  console.log(product);
+
   const limitString = (str) => {
     if (str.length > 200)
       return { string: str.slice(0, 197).concat("..."), addButton: true };

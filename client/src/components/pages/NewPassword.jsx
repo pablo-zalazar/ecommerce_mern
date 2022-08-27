@@ -65,7 +65,6 @@ export default function NewPassword() {
       ) : validToken ? (
         !changedPassword ? (
           <>
-            <h2>Forget password</h2>
             <Formik
               initialValues={{ password: "", confirmPassword: "" }}
               validationSchema={createSchema}
@@ -74,6 +73,7 @@ export default function NewPassword() {
               onSubmit={(values, { resetForm }) => onSubmit(values, resetForm)}
             >
               <Form>
+                <h2>New password</h2>
                 <div>
                   <label htmlFor="password">Enter new password</label>
                   <Field

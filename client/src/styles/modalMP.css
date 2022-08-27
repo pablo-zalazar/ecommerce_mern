@@ -1,0 +1,55 @@
+.modalContainer {
+  padding: 10px;
+}
+
+.modalContainer .payForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modalContainer .payForm input {
+  padding: 5px;
+  outline: none;
+  border: var(--global-border);
+  border-radius: var(--global-radius);
+}
+
+.modalContainer .payForm button {
+  position: relative;
+  width: 100px;
+  padding: 10px;
+  text-align: center;
+  border: var(--global-border);
+  border-radius: var(--global-radius);
+  background-color: var(--global--color);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.modalContainer .payForm button:hover {
+  cursor: pointer;
+  border: var(--global-border-hover);
+  background-color: var(--global--color-hover);
+}
+
+.modalContainer .payForm button:active {
+  top: 2px;
+  background-color: var(--global--color-active);
+}
+
+.modalContainer .payLink {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modalContainer .payLink h3 {
+  color: #000;
+  text-align: center;
+}
+
+.modalContainer .payLink a img {
+  width: 100%;
+}

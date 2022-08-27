@@ -20,6 +20,7 @@
 
 .main .filters .filtersName p {
   border: var(--global-border);
+  border-radius: var(--global-radius);
   background-color: #fff;
   width: max-content;
   padding: 5px;

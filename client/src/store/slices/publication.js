@@ -324,6 +324,7 @@ export const actionUpdatePublication = (values, token, id) => {
       await axios.put(URL, body, config);
       dispatch(actionGetMyPublications(token, id));
       dispatch(actionSetLoading(false));
+      socket.emit("renderHome");
       return { msg: "Publication updated" };
     } catch (e) {
       throw { msg: e.response.data.msg };

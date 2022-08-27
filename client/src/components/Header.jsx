@@ -16,7 +16,7 @@ export default function Header({ setModalLogin, setModalRegister }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { user, setShowSettings } = useSelector((state) => state.users);
+  const { user, showSettings } = useSelector((state) => state.users);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function Header({ setModalLogin, setModalRegister }) {
   return Object.keys(user).length > 0 ? (
     <header>
       <div className="leftSide">
-        <Link to="/">
+        <Link onClick={() => dispatch(actionSetShowSettings(false))} to="/">
           <img src="/img/logo.png" alt="logo" />
         </Link>
         <h3>
@@ -48,7 +48,7 @@ export default function Header({ setModalLogin, setModalRegister }) {
           <button>
             <GiHamburgerMenu
               className="icon"
-              onClick={() => dispatch(actionSetShowSettings(!setShowSettings))}
+              onClick={() => dispatch(actionSetShowSettings(!showSettings))}
             />
           </button>
         </div>

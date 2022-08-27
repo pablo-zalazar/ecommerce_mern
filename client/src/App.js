@@ -11,6 +11,9 @@ import MyPublications from "./components/pages/MyPublications";
 import Details from "./components/pages/Details";
 import Cart from "./components/pages/Cart";
 import Profile from "./components/pages/Profile";
+import NotFound from "./components/pages/NotFound";
+import ConfirmPusrchase from "./components/pages/ConfirmPurchase";
+import FailPurchase from "./components/pages/FailPurchase";
 
 function App() {
   return (
@@ -38,6 +41,16 @@ function App() {
           <Route path="/profile" element={<VerifyUser />}>
             <Route index element={<Profile />} />
           </Route>
+
+          <Route path="/profile/confirm" element={<VerifyUser />}>
+            <Route index element={<ConfirmPusrchase />} />
+          </Route>
+
+          <Route path="/profile/failure" element={<VerifyUser />}>
+            <Route index element={<FailPurchase />} />
+          </Route>
+
+          <Route path="/*" element={<NotFound />} />
         </Routes>
       </Layout>
     </BrowserRouter>

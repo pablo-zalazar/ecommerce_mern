@@ -1,11 +1,4 @@
 .confirmUser {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 20vh;
-}
-
-.confirmUser div {
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -14,7 +7,25 @@
   gap: 10px;
 }
 
-.confirmUser div a {
+.confirmUser a {
+  padding: 10px;
+  text-align: center;
+  border: var(--global-border);
+  border-radius: var(--global-radius);
+  background-color: var(--global--color);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
   text-decoration: none;
-  color: #000;
+}
+
+.confirmUser a:hover {
+  cursor: pointer;
+  border: var(--global-border-hover);
+  background-color: var(--global--color-hover);
+}
+
+.confirmUser a:active {
+  top: 2px;
+  background-color: var(--global--color-active);
 }

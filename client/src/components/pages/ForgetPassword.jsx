@@ -6,18 +6,21 @@ import { useDispatch } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Formik, Form, ErrorMessage, Field } from "formik";
+import { useNavigate } from "react-router-dom";
 
 import Alert from "../Alert";
 import { actionForgetPassword } from "../../store/slices/user";
 
 export default function ForgetPassword() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const onSubmit = async (values, resetForm) => {
     try {
       const data = await dispatch(actionForgetPassword(values));
       Alert("success", data.msg);
       resetForm();
+      navigate("/");
     } catch (e) {
       Alert("error", e);
     }

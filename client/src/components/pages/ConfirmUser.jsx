@@ -28,10 +28,8 @@ export default function ConfirmUser() {
   return (
     <>
       <div className="confirmUser">
-        <div>
-          <h2>User confirmed</h2>
-          <Link to="/">Return</Link>
-        </div>
+        <h2>User confirmed</h2>
+        <Link to="/">Return</Link>
       </div>
     </>
   );

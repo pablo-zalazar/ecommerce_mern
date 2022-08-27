@@ -194,13 +194,13 @@ export default function Home() {
 
   const handleSort = (e) => {
     dispatch(actionSetSort(e.target.value));
-    dispatch(actionSetFilter({ ...filterRedux }, currentPage, sort));
+    dispatch(actionSetFilter({ ...filterRedux }, 1, sort));
   };
 
   return (
     <div className="main">
       <section className="filters">
-        {!loading && <h3>{publications.length} Results</h3>}
+        {!loading ? <h3>{publications.length} Results</h3> : <h3>Results</h3>}
 
         <button className="reset" onClick={() => handleReset()}>
           reset

@@ -7,6 +7,8 @@ import connectDB from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import publicationRoutes from "./routes/publicationsRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import mercadoPago from "./routes/mercadoPago.js";
+
 import fileUpload from "express-fileupload";
 
 const app = express();
@@ -36,12 +38,9 @@ app.use((req, res, next) => {
 app.use("/api/users", userRoutes);
 app.use("/api/publications", publicationRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/process-payment", mercadoPago);
 
 const PORT = process.env.PORT || 4000;
-
-// app.listen(4000, () => {
-//   console.log(`Server connected on port ${PORT}`);
-// });
 
 const server = app.listen(PORT, () => {
   console.log(`Server connected on port ${PORT}`);
@@ -72,11 +71,22 @@ io.on("connection", (socket) => {
       .to(`${process.env.FRONTEND_URL}/myPublications`)
       .emit("MyPublicationsUpdate");
   });
+
   //------------------
   socket.on("UpdateTransactions", (room) => {
     socket.join(room);
   });
   socket.on("updateTransaction", () => {
     socket.to(`${process.env.FRONTEND_URL}/Profile`).emit("transactionUpdate");
+  });
+
+  //------------------
+
+  socket.on("Navigate", (room) => {
+    socket.join(room);
+  });
+
+  socket.on("Redirect", (path) => {
+    socket.to(`${process.env.FRONTEND_URL}/Profile`).emit("redireccion", path);
   });
 });

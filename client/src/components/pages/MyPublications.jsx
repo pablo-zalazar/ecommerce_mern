@@ -4,9 +4,7 @@ import "../../styles/forms.css";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
-import { FaCamera } from "react-icons/fa";
 import { Formik, Form, ErrorMessage, Field } from "formik";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
@@ -109,7 +107,7 @@ export default function MyPublications() {
       .required(required)
       .test(
         "fileType",
-        "Unsupported File Format",
+        "Invalid format (jpg jpeg png webp)",
         (value) => value && SUPPORTED_FORMATS.includes(value.type)
       ),
   });
