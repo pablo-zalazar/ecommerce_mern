@@ -16,21 +16,6 @@ export const emailRegisterUser = async (data) => {
     },
   });
 
-  // var transport = nodemailer.createTransport(
-  //   smtpTransport({
-  //     host: "smtp.gmail.com",
-  //     secure: true, // use SSL
-  //     port: 465, // port for secure SMTP
-  //     auth: {
-  //       user: "pablogz.cabj@gmail.com",
-  //       pass: "irvspfolpvxcgdcb",
-  //     },
-  //     tls: {
-  //       rejectUnauthorized: false,
-  //     },
-  //   })
-  // );
-
   const info = await transport.sendMail({
     from: "<ecommerce@gmail.com>",
     to: email,
@@ -48,13 +33,15 @@ export const emailForgetPassword = async (data) => {
   const { email, name, token } = data;
 
   const transport = nodemailer.createTransport({
-    // host: "smtp.mailtrap.io",
-    host: "smtp.gmail.io",
+    host: "smtp.gmail.com",
     port: 465,
-    secure: true,
+    secure: true, // true for 465, false for other ports
     auth: {
-      user: "pablogz.cabj@gmail.com",
-      pass: "dwerrwudfttyrzmr",
+      user: "pablogz.cabj@gmail.com", // generated ethereal user
+      pass: "irvspfolpvxcgdcb", // generated ethereal password
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 
