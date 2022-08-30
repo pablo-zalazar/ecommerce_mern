@@ -21,6 +21,9 @@ export const userSlice = createSlice({
     logout: (state) => {
       state.user = {};
     },
+    updateUset: (state, action) => {
+      state.user = action.payload;
+    },
     setLoading: (state, action) => {
       state.loading = action.payload;
     },
@@ -43,6 +46,7 @@ export const {
   setTransactions,
   clearTransactions,
   setShowSettings,
+  updateUset,
 } = userSlice.actions;
 
 export default userSlice.reducer;
@@ -84,6 +88,27 @@ export const actionUserRegister = (user) => {
     try {
       const { data } = await axios.post(URL, user, config);
       return data;
+    } catch (e) {
+      throw e.response.data.msg;
+    }
+  };
+};
+
+export const actionUserEdit = (token, user) => {
+  return async function (dispatch) {
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const URL = `${process.env.REACT_APP_BACKEND_URL}/api/users/profile/${user._id}`;
+    try {
+      const { data } = await axios.put(URL, user, config);
+      dispatch(updateUset(data));
+      dispatch(actionAuthenticateUser(token));
+      return "User Updated";
     } catch (e) {
       throw e.response.data.msg;
     }

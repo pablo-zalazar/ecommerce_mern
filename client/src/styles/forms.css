@@ -1,9 +1,21 @@
+/* .formContainer {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+} */
+
 form {
   display: flex;
   flex-direction: column;
   gap: 10px;
-
   padding: 10px;
+}
+
+.formContainer form h2 {
+  text-align: center;
 }
 
 form div {
@@ -70,4 +82,8 @@ form a {
 
 form a:hover {
   text-decoration: underline;
+}
+
+form .error {
+  color: #f00;
 }

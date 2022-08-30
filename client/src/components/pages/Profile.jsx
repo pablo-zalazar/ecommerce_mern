@@ -66,7 +66,7 @@ function Profile() {
           <Link className="action" to="/forgetPassword">
             Edit password
           </Link>
-          <Link className="action" to="#">
+          <Link className="action" to="/profile/edit">
             Edit profile
           </Link>
           {/* <button>Change password</button>

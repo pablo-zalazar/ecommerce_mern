@@ -32,6 +32,28 @@ export const register = async (req, res) => {
   }
 };
 
+export const updateUser = async (req, res) => {
+  const { id } = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(id, req.body);
+    await user.save();
+    console.log(user);
+    return res.json({
+      _id: user._id,
+      name: user.name,
+      lastname: user.lastname,
+      user: user.user,
+      email: user.email,
+      publications: user.publications,
+      admin: user.admin,
+      money: user.money,
+      cart: user.cart,
+    });
+  } catch (e) {
+    res.status(400).json({ msg: e.message });
+  }
+};
+
 export const authenticate = async (req, res) => {
   const { email, password } = req.body;
 

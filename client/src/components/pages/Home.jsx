@@ -253,9 +253,7 @@ export default function Home() {
                 <h4
                   key={cat._id}
                   onClick={() => handleFilter(["category", cat.name])}
-                  className={
-                    filterRedux.category === cat.name ? "filtActive" : ""
-                  }
+                  className={filterRedux.category === cat.name && "filtActive"}
                 >
                   {cat.name}
                 </h4>
@@ -268,11 +266,9 @@ export default function Home() {
                           handleFilter(["subCategory", cat.name, subCat])
                         }
                         className={
-                          filterRedux.subCategory === subCat
-                            ? filterRedux.category === cat.name
-                              ? "filtActive"
-                              : ""
-                            : ""
+                          filterRedux.subCategory === subCat &&
+                          filterRedux.category === cat.name &&
+                          "filtActive"
                         }
                       >
                         {subCat}

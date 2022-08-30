@@ -12,6 +12,7 @@ import {
   buyCart,
   clearCart,
   getTransactions,
+  updateUser,
 } from "../controllers/userController.js";
 import checkAuth from "../middleware/checkAuth.js";
 
@@ -23,11 +24,13 @@ router.get("/confirm/:token", confirm);
 router.post("/forget-password", forgetPassword);
 router.route("/forget-password/:token").get(checkToken).post(newPassword);
 
-router.get("/profile", checkAuth, profile);
 router.get("/addToCart/:id", checkAuth, addToCart);
 router.get("/removeFromCart/:id", checkAuth, removeFromCart);
 router.post("/buyCart", checkAuth, buyCart);
 router.post("/clearCart", checkAuth, clearCart);
 router.get("/transactions", checkAuth, getTransactions);
+
+router.get("/profile", checkAuth, profile);
+router.put("/profile/:id", checkAuth, updateUser);
 
 export default router;

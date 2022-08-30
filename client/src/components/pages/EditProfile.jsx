@@ -1,21 +1,27 @@
 import React from "react";
+import "../../styles/changePassword.css";
+import "../../styles/forms.css";
 import * as Yup from "yup";
 import { Formik, Form, ErrorMessage, Field } from "formik";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { actionUserEdit } from "../../store/slices/user";
 
-import { actionUserRegister } from "../store/slices/user";
+import Alert from "../Alert";
 
-import Alert from "./Alert";
-
-export default function RegisterModal({ showModal }) {
+export default function EditProfile() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.users);
+  const token = localStorage.getItem("token");
 
   const onSubmit = async (values, resetForm) => {
     try {
-      const data = await dispatch(actionUserRegister(values));
-      Alert("success", data.msg);
+      const msg = await dispatch(actionUserEdit(token, values));
+      Alert("success", msg);
       resetForm();
-      showModal(false);
+      navigate("/profile");
     } catch (e) {
       Alert("error", e);
     }
@@ -28,25 +34,25 @@ export default function RegisterModal({ showModal }) {
     lastname: Yup.string().min(4, "At least 6 characters").required(required),
     user: Yup.string().min(5, "At least 6 characters").required(required),
     email: Yup.string().email("Invalid format").required(required),
-    password: Yup.string().min(6, "At least 6 characters").required(required),
     birthday: Yup.string().required(required),
   });
 
   return (
-    <div className="formContainer">
-      <h2>Create User</h2>
+    <div className="changePassword">
+      <h2>Update User</h2>
       <Formik
         initialValues={{
-          name: "",
-          lastname: "",
-          user: "",
-          password: "",
-          email: "",
-          birthday: "",
+          id: user._id,
+          name: user.name,
+          lastname: user.lastname,
+          user: user.user,
+          email: user.email,
+          birthday: user.birthday,
         }}
         validationSchema={createSchema}
         validateOnChange={false}
         validateOnBlur={false}
+        enableReinitialize={true}
         onSubmit={(values, { resetForm }) => onSubmit(values, resetForm)}
       >
         <Form>
@@ -84,25 +90,13 @@ export default function RegisterModal({ showModal }) {
             </p>
           </div>
           <div>
-            <label htmlFor="password">Password</label>
-            <Field
-              name="password"
-              id="password"
-              type="password"
-              placeholder="password"
-            />
-            <p className="error">
-              <ErrorMessage name="password" />
-            </p>
-          </div>
-          <div>
             <label htmlFor="birthday">Birthday</label>
             <Field name="birthday" id="birthday" type="Date" />
             <p className="error">
               <ErrorMessage name="birthday" />
             </p>
           </div>
-          <input type="submit" value="Create" />
+          <input type="submit" value="Update" />
         </Form>
       </Formik>
     </div>

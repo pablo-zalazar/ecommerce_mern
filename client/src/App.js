@@ -14,6 +14,7 @@ import Profile from "./components/pages/Profile";
 import NotFound from "./components/pages/NotFound";
 import ConfirmPusrchase from "./components/pages/ConfirmPurchase";
 import FailPurchase from "./components/pages/FailPurchase";
+import EditProfile from "./components/pages/EditProfile";
 
 function App() {
   return (
@@ -40,6 +41,10 @@ function App() {
 
           <Route path="/profile" element={<VerifyUser />}>
             <Route index element={<Profile />} />
+          </Route>
+
+          <Route path="/profile/edit" element={<VerifyUser />}>
+            <Route index element={<EditProfile />} />
           </Route>
 
           <Route path="/profile/confirm" element={<VerifyUser />}>

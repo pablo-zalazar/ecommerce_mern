@@ -28,7 +28,7 @@ export default function LoginModal({ showModal }) {
   });
 
   return (
-    <div>
+    <div className="formContainer">
       <h2>Log in</h2>
       <Formik
         initialValues={{ email: "", password: "" }}
@@ -58,7 +58,7 @@ export default function LoginModal({ showModal }) {
             </p>
           </div>
           <div className="actions">
-            <input type="submit" value="log in" />
+            <input type="submit" value="Log in" />
             <Link to="/forgetPassword" onClick={() => showModal(false)}>
               Forget password?
             </Link>
