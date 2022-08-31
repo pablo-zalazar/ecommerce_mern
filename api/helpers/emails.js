@@ -6,10 +6,10 @@ export const emailRegisterUser = async (data) => {
   const transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
-    secure: true, // true for 465, false for other ports
+    secure: true,
     auth: {
-      user: "pablogz.cabj@gmail.com", // generated ethereal user
-      pass: "irvspfolpvxcgdcb", // generated ethereal password
+      user: process.env.NODEMAILER_EMAIL,
+      pass: process.env.NODEMAILER_PASSWORD,
     },
     tls: {
       rejectUnauthorized: false,
