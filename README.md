@@ -28,7 +28,7 @@
 ![articles](https://user-images.githubusercontent.com/57506571/187503355-f039a80f-0dce-4a03-956a-d33c93fa57c1.png)
 ![profile](https://user-images.githubusercontent.com/57506571/187503388-3986162d-2264-47e3-adf2-7cc8a9430488.png)
 
-<p>Tarjeta de prueba</p>
-Numero: 5031 7557 3453 0604	
-CVV: 123	
-F. Vencimiento: 11/25
+### Tarjeta de prueba
+<p>Numero: 5031 7557 3453 0604</p>
+<p>CVV: 123</p>
+<p>F. Vencimiento: 11/25</p>
