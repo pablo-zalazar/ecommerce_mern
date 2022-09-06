@@ -33,7 +33,6 @@
   background-color: var(--global--color);
   color: #fff;
   font-weight: 700;
-  content: "asd";
 }
 
 .formContainer .file::file-selector-button:hover {

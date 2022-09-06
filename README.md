@@ -1,9 +1,12 @@
-# E-commerce 
+# E-commerce
+
+<div>
 <p>
   El proyecto es una plataforma de compra y venta de artículos donde cada usuario pueda crear y poner en venta sus artículos, modificarlos, eliminarlos y comprar los de otros usuarios.
 </p>
 
 ## Tecnologías
+
 <p>
   Se desarrollo en base al stack de tecnologías MERN (MongoDb, Express, ReactJs, NodeJs) y se utilizaron otras librerías como:
   <ul>
@@ -24,3 +27,8 @@
 ![cart](https://user-images.githubusercontent.com/57506571/187503325-c9d827fd-f23d-4971-84ef-5def39feb0bc.png)
 ![articles](https://user-images.githubusercontent.com/57506571/187503355-f039a80f-0dce-4a03-956a-d33c93fa57c1.png)
 ![profile](https://user-images.githubusercontent.com/57506571/187503388-3986162d-2264-47e3-adf2-7cc8a9430488.png)
+
+<p>Tarjeta de prueba</p>
+Numero: 5031 7557 3453 0604	
+CVV: 123	
+F. Vencimiento: 11/25

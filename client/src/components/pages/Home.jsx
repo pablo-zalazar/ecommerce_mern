@@ -205,9 +205,9 @@ export default function Home() {
         <button className="reset" onClick={() => handleReset()}>
           reset
         </button>
-
+        {search && <h3>{search.toUpperCase()}</h3>}
         <h2>Filters</h2>
-        {search && <h3>{search}</h3>}
+
         <div className="filtersName">
           {filterRedux.category && (
             <p onClick={() => handleRemoveFilter("category")}>

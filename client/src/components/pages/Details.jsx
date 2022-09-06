@@ -69,28 +69,32 @@ export default function Details() {
               <p>{details.subCategory}</p>
               <p>In stock: {details.stock}</p>
               <h3>${details.price}</h3>
-              <div className="actions">
-                {Object.keys(user).length > 0 ? (
-                  user._id !== details.owner._id && (
-                    <div>
-                      <button
-                        className="btnPrimary"
-                        onClick={() => handleBuy()}
-                      >
-                        Buy now
-                      </button>
-                      <button
-                        className="btnSecondary"
-                        onClick={() => addToCart()}
-                      >
-                        Add to cart
-                      </button>
-                    </div>
-                  )
-                ) : (
-                  <h3>log in to buy</h3>
-                )}
-              </div>
+              {details.stock > 0 ? (
+                <div className="actions">
+                  {Object.keys(user).length > 0 ? (
+                    user._id !== details.owner._id && (
+                      <div>
+                        <button
+                          className="btnPrimary"
+                          onClick={() => handleBuy()}
+                        >
+                          Buy now
+                        </button>
+                        <button
+                          className="btnSecondary"
+                          onClick={() => addToCart()}
+                        >
+                          Add to cart
+                        </button>
+                      </div>
+                    )
+                  ) : (
+                    <h3>log in to buy</h3>
+                  )}
+                </div>
+              ) : (
+                <h3 className="noStock">Out of stock</h3>
+              )}
             </div>
 
             <div className="description">
